@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="UTF-8">
+        <title>番剧页</title>
+        <style>
+            body{/*主页布局*/
+                background: #fffefe;
+                font-family:"Microsoft YaHei",sans-serif;
+                min-height:100vh;
+                margin:0;
+                padding:0;
+                box-sizing:border-box;/*布局不撑大*/
+            }
+            .demo-nav{/*导航栏*/
+                display:flex;
+                justify-content:space-between;/*左右分布*/
+                align-items:center;
+                position:fixed;
+                top:0;
+                left:0;
+                width:100%;
+                background:rgba(0,0,0,0.1);
+                height:80px;
+                border-radius:8px;
+                color:#f6f6f8;
+                z-index:999;
+                transition:all 0.3s;
+            }
+            .demo-nav.scrolled{
+                background:#f9f7f7 !important;
+                border-bottom:1px solid #eee !important;
+                color:#333!important;
+            }
+            .demo-nav span{/*导航栏文字*/
+                display:inline-block;/*支持transform位移*/
+            }
+            .demo-nav span:hover{
+                color:#00a1d6;
+                cursor:pointer;
+                transform:translateY(-4px);/*向上跳*/
+                transition:all 0.3s 
+                cubic-bezier(0.34,1.56,0.64,1);
+            }
+            .nav-left{/*导航栏左侧*/
+                display:flex;
+                align-items:center;
+                gap:20px;
+                margin-left:10px;
+            }
+            .nav-logo{/*导航栏左侧小电视*/
+                width:32px;
+                height:32px;
+                object-fit:contain;
+                cursor:pointer;
+                transition:all 0.3s cubic-bezier(0.34,1.56,0.64,1);
+            }
+            .nav-logo:hover{
+                transform:scale(1.2);
+                box-shadow:0 4px 15px rgba(0,0,0,0.2);/*添加阴影*/
+            }
+            .nav-right{/*导航栏右侧*/
+                display:flex;
+                align-items:center;
+                gap:15px;
+                margin-left:auto;
+                margin-right:10px;
+            }
+            .login{/*登录头像*/
+                width:50px;
+                height:50px;
+                border-radius:50%;
+                margin:10px 10px;
+                transition:transform 0.3s ease;
+                cursor:pointer;
+            }
+            .login:hover{
+                transform:scale(1.1);
+            }
+            .modal{/*遮罩层弹窗*/
+                position:fixed;/*固定定位*/
+                inset:0;/*全罩住*/
+                background:rgba(0,0,0,0.4);
+                display:none;
+                justify-content:center;
+                align-items: center;
+                z-index:999/*位于最上层*/
+            }
+            .box{/*登录界面*/
+                background:#c6c3c3;
+                padding:30px;
+                width:40%;
+                height:60%;
+                border-radius:10px;
+                text-align:center;
+                background-image:url("nav-bg.jpg");
+                background-size:cover;
+                background-position:center;
+                background-repeat:no-repeat;
+            }
+            .box-input{/*登录输入框*/
+                width:70%;
+                height:52px;
+                margin:15px auto;
+                padding:0 15px;
+                border-radius:8px;
+                outline:none;
+                font-size:18px;
+                transition:all 0.2s;
+            }
+            .box-button{/*登录框按钮*/
+                width:30%;
+                height:40px;
+                margin:auto;
+                padding:10px 15px;
+                border-radius:8px;
+                font-size:14px;
+                transition:all 0.2s;
+            }
+            .box-button:hover{
+                transform:scale(1.1);
+                background:rgba(0,0,0,0.4);
+            }
+            .avatar-container{
+                position:relative;
+                display:inline-block;
+                cursor:pointer;
+            }
+            .user-menu{
+                position:absolute;
+                top:50px;
+                left:50%;
+                width:350px;
+                height:500px;
+                transform:translate(-50%,10px);
+                background-image:url("nav-bg.jpg");
+                background-size:cover;
+                background-position:center;
+                background-repeat:no-repeat;
+                border-radius:8px;
+                box-shadow:0 4px 16px rgba(0,0,0,0.15);
+                display:none;
+                transition:all 0.25s ease;
+                opacity:0;
+                visibility:hidden;
+                z-index:999;
+            }
+            .user-menu.show{
+                visibility:visible;
+                opacity:1;
+                display:block;
+            }
+            .menu-header{
+                display:flex;
+                margin-top:10px;
+                text-align:center;
+                padding:0 16px 16px;
+                border-bottom:1px solid #eee;
+            }
+            #menuAvatar{
+                width:100px;
+                height:100px;
+                border-radius:50%;
+                object-fit:cover;
+            }
+            .username{
+                display:flex;
+                justify-content:center;
+                font-weight:bold;
+                margin:8px 0 4px;
+                font-size:30px;
+            }
+            .menu-items span{
+                display:block;
+                padding:12px 16px;
+                font-size:20px;
+                cursor:pointer;
+            }
+            .menu-items span:hover{
+                background:#f5f5f5;
+            }
+            .logout-item{   
+                display:flex;
+                align-items:center;
+                justify-content:center;
+                border-top:1px solid #eee;
+                padding:12px 16px;
+                cursor:pointer;
+                font-size:20px;
+            }
+            .logout-item:hover{
+                background:#f5f5f5;
+                color:#00a1d6;
+            }
+            .search-box{/*导航栏搜索框*/
+                background:#c2bfbf;
+                display:flex;
+                padding:0 20px;
+                height:40px;
+                border-radius:8px;
+                opacity:0.5;
+            }
+            .search-box input{/*搜索框输入*/
+                background:transparent;
+                border-radius:8px;
+                font-size:14px;
+                padding:0 15px;
+                outline:none;
+            }
+            .search-box input::placeholder{
+                color:#969191;
+                opacity:1;
+                border:none;
+            }
+            .search-box:hover{
+                background:#f1f1f1;
+                transition:all 0.2s ease;
+                cursor:pointer;
+                opacity:0.9;
+            }
+            .search-icon{/*搜索图像*/
+                display:flex;
+                position:relative;
+                margin-right:10px;
+                cursor:pointer;
+            }
+            .search-icon:hover{
+                transform:scale(1.1);
+            }
+            .action-bar{/*导航栏右侧标签*/
+                display:flex;
+                justify-content:space-around;
+                align-items:center;
+                gap:12px;
+                padding:20px 0;
+            }
+            .action-item{/*标签图形+文字*/
+                display:flex;
+                flex-direction:column;
+                align-items:center;
+                gap:12px;
+                cursor:pointer;
+                transition:transform 0.2s;
+            }
+            .action-btn:hover{
+                transform:translateY(-5px);
+            }
+            .submit{
+                background:#f978d0;
+                padding:10px 30px;
+                border-radius:8px;
+                border:none;
+                color:#f1f1f1;
+            }
+            .submit:hover{
+                background:#faa6ec;
+                cursor:pointer;
+            }
+            .banner{/*轮播图*/
+                display:flex;
+                width:100%;
+                height:400px;
+                overflow:hidden;
+                position:relative;
+                border-radius:8px;
+            }
+            .banner-slides{
+                display:flex;
+                height:100%;
+                width:100%;
+                transition:all 0.8s ease;
+            }
+            .banner-item{
+                flex-shrink:0;
+                width:100%;
+                height:100%;
+                object-fit:cover;
+            }
+            .banner-item.active{
+                opacity:1;
+                transform:translateX(0);
+            }
+            .thumb-list{
+                display:grid;
+                grid-template-columns:repeat(5,1fr);
+                border-radius:8px;
+                width:100%;
+                height:100%;
+                padding:0 25px;
+                box-sizing:border-box;
+                margin-top:10px;
+            }
+            .thumb-item{
+                display:flex;
+                height:136px;
+                width:270px;
+                justify-content:center;
+                border-radius:8px;
+                overflow:hidden;
+                cursor:pointer;
+                transition:all 0.2s ease;
+                opacity:0.9;
+            }
+            .thumb-item:hover,.thumb-item.active{
+                transform:scale(1.15);
+                 box-shadow:0 4px 16px rgba(0,0,0,0.5);
+                 opacity:1;
+            }
+            .thumb-item img{
+                width: 100%;
+                height:100%;
+                object-fit:cover;
+                display:block;
+            }
+             .filter-container {
+                display: grid;
+                grid-template-columns: repeat(4, 1fr);
+                gap: 20px;
+                padding: 20px;
+                margin: 10px 0;
+            }
+
+
+            .filter-card {/*四个框*/
+                width: 100%;
+                height: 300px; 
+                border-radius: 8px;
+                padding: 15px;
+                box-sizing: border-box; /*padding不撑大框体 */
+                display: flex;
+                flex-direction: column;
+                gap: 15px;
+                overflow: hidden; /* 防止内容溢出框体 */
+            }
+
+            .card-title {/*框内标题*/
+                font-weight: bold;
+                font-size: 18px;
+                color: #333;
+                margin: 0;
+                text-align: center;
+                /* 固定标题高度，不占标签空间 */
+                height: 30px;
+                line-height: 30px;
+                flex-shrink: 0;
+            }
+
+            .tag-group {
+                display:grid;/*网格布局*/
+                flex:1;/*填满剩余界面*/
+                grid-template-columns:repeat(2,1fr);/*4列*/
+                border-radius:8px;
+                gap:15px;
+                padding:0 15px;
+                
+            }
+            .tag-group span{
+                font-weight: bold;
+                font-size: 20px;
+                border-radius:8px;
+                text-align:center;
+            }
+            .tag-group span:hover{
+                color:#00a1c4;
+                cursor:pointer;
+                transform:translateY(-5px);
+                transition:all .2s;
+            }
+            .sidebar{
+                display:flex;
+                flex-direction:column;
+                gap:20px;
+                background:#fff;
+                padding:0 10px;
+                border-radius:8px;
+                position:fixed;
+                right:0;
+                top:50%;
+                transform:translateY(-50%);
+                box-shadow:0 2px 8px rgba(0,0,0,0.1);
+            }
+            .sidebar-item{
+                display:flex;
+                flex-direction:column;
+                align-items:center;
+                font-size:14px;
+                color:#666;
+                cursor:pointer;
+                transition:all 0.2s ease;
+            }
+            .sidebar-item:hover{
+                color:#00a1d6;
+            }
+            .back-to-top{
+                opacity:0;
+                visibility:hidden;/*不可见*/
+                transition:opacity 0.3s,visibility 0.3s;
+            }
+            .back-to-top.show{
+                opacity:1;
+                visibility:visible/*可见*/
+            }
+        </style>
+    </head>
+    <body>
+        <script>
+             window.addEventListener('scroll',function()
+        {
+            const demoNav=document.querySelector('.demo-nav');
+            if (!demoNav) return;
+            if(window.scrollY>300)
+            {
+                demoNav.classList.add('scrolled');
+            }
+            else
+            {
+                demoNav.classList.remove('scrolled');
+            }
+        });
+        </script>
+        <div class="demo-nav">
+            <div class="nav-left">
+                <img src="logos/logo.png" alt="B站" class="nav-logo">
+                <span>首页</span>
+                <span>番剧</span>
+                <span>直播</span>
+                <span>游戏中心</span>
+                <span>会员购</span>
+                <span>漫画</span>
+                <span>赛事</span>
+                <span>AI豆</span>
+            </div>           
+            <div class="nav-right">
+                <div class="avatar-container">
+                    <img  id="login" src="logos/bilibili.png" alt="登陆头像" class="login" onclick="handleAvatarClick()">
+                    <div id="userMenu" class="user-menu">
+                        <p class="username">star</p>
+                        <div class="menu-items">
+                            <span>个人中心</span>
+                            <span>投稿管理</span>
+                            <span>推荐服务</span>
+                            <span>主题：浅色</span>
+                            <div class="logout-item" onclick="logout()">退出登录</div>
+                        </div>
+                    </div>
+                </div>
+                <div id="modal" class="modal">
+                    <div class="box">
+                        <div id="loginView">
+                            <h3>登录</h3>
+                            <input id="user" type="text" placeholder="账号" class="box-input">
+                            <input id="pwd" type="password" placeholder="密码" class="box-input">
+                            <button onclick="login()" class="box-button">登录</button>
+                        </div>
+                        <div id="logoutView" style="display:none">
+                            <h3>已登录</h3>
+                            <button onclick="logout()" class="box-button">退出登录</button>
+                        </div>
+                        <br>
+                        <button onclick="closeBox()" class="box-button">关闭</button>
+                    </div>
+                </div>
+                <script>
+                    let isLogin=false;
+                    let 
+                    loginAvatar,userMenu,menuAvatar,usernameEl;
+                    document.addEventListener('DOMContentLoaded',function()
+                    {
+                        loginAvatar=document.getElementById('login');
+                        userMenu=document.getElementById('userMenu');
+                        menuAvatar=document.getElementById('menuAvatar');
+                        usernameEl=document.querySelector('.username');
+                    })
+                    function handleAvatarClick(){
+                        if(!isLogin)
+                        {
+                            openBox();
+                        }
+                        else{
+                            toggleMenu();
+                        }
+                    }
+                    function toggleMenu(){
+                        userMenu.classList.toggle('show');
+                    }
+                    document.addEventListener('click',(e) => {
+                        if (!document.querySelector('.avatar-container').contains(e.target)){
+                            userMenu.classList.remove('show');
+                        }
+                    });
+                    function openBox(){
+                        document.getElementById("modal").style.display="flex";
+                        if(isLogin){
+                            document.getElementById("loginView").style.display="none";
+                            document.getElementById("logoutView").style.display="block";
+                        }
+                        else{
+                            document.getElementById("loginView").style.display="block";
+                            document.getElementById("logoutView").style.display="none";  
+                        }
+                    }
+                    function closeBox(){
+                        document.getElementById("modal").style.display="none";
+                    }
+                    function login()
+                    {
+                        const userInput=document.getElementById("user").value.trim();/*拿到输入框*/
+                        const pwdInput=document.getElementById("pwd").value.trim();
+                        if (!userInput || !pwdInput)
+                        {
+                            alert("账号和密码不能为空!");
+                            return;
+                        }
+                        var myHeaders = new Headers();
+                        myHeaders.append("Content-Type","application/json");
+                        var raw=JSON.stringify({
+                            name:userInput,
+                            pwd:pwdInput
+                        });
+                        var requestOptions={
+                            method:'POST',
+                            headers:myHeaders,
+                            body:raw,
+                            redirect:'manual'
+                        }
+                        fetch("http://47.107.55.106:8080/api/user/login",requestOptions)
+                        .then(response => response.json())
+                        .then(data =>
+                        {
+                            console.log("接口返回数据",data);
+                            if(data.code === 200)
+                            {
+                                isLogin=true;
+                                document.getElementById("login").src="avatar.png";
+                                localStorage.setItem("token",data.data);
+                                closeBox();
+                                alert("登录成功!");
+                            }
+                            else
+                            {
+                                alert("登录失败:" + (data.message || "账号或密码错误"));
+                            }
+                        })
+                        .catch(err => 
+                        {
+                            console.error("登录请求异常:",err);
+                            alert("网络异常，请检查后重试！");
+                        });
+                    }
+                    function logout() 
+                    {
+                        const token = localStorage.getItem("token");
+                        if (!token) {
+                            resetLoginState();
+                            return;
+                        }
+                        var myHeaders=new Headers();
+                        myHeaders.append("Authorization",token);
+                        var requestOptions={
+                            method:'GET',
+                            headers:myHeaders,
+                            redirect:'follow'
+                        };
+                        fetch("http://47.107.55.106:8080/api/user/logout",requestOptions)
+
+                        .then(response => response.json())
+                        .then(res => {
+                            if (res.code === 200) {
+                            localStorage.removeItem("token");
+                            resetLoginState();
+                            alert("已成功退出登录");
+                            } 
+                            else 
+                            {
+                                alert("退出失败：" + (res.message || "未知错误"));
+                            }
+                        })
+                        .catch(error => {
+                            console.log('error', error);
+                            alert("网络异常，请稍后重试！");
+                        });
+                    }
+                    // 封装重置登录状态的函数（复用）
+                    function resetLoginState() {
+                    isLogin = false;
+                    // 恢复默认头像
+                    document.getElementById("login").src = "logos/bilibili.png";
+                    if(menuAvatar){
+                        menuAvatar.src = "logos/bilibili.png";
+                    }
+                    if(usernameEl){
+                        usernameEl.innerText = "未登录";
+                    }
+                    // 关闭下拉菜单
+                    if(userMenu){
+                        userMenu.classList.remove('show');
+                    }
+                    // 恢复登录弹窗状态
+                    document.getElementById("loginView").style.display = 'block';
+                    document.getElementById("logoutView").style.display = 'none';
+                    }
+                </script>
+                <div class="search-box">
+                    <input type="text" placeholder="搜索" style="border:none">
+                    <img src="logos/search.png" alt="搜索" class="search-icon">
+                </div>
+                <div class="action-bar">
+                    <div class="action-item">
+                        <img src="logos/大会员.png" alt="大会员" class="action-btn">
+                        <span>大会员</span>
+                    </div>
+                    <div class="action-item">
+                        <img src="logos/消息.png" alt="消息" class="action-btn">
+                        <span>消息</span>
+                    </div>
+                    <div class="action-item">
+                        <img src="logos/动态.png" alt="动态" class="action-btn">
+                        <span>动态</span>
+                    </div>
+                    <div class="action-item" id="go-collection">
+                        <img src="logos/收藏.1.png" alt="收藏" class="action-btn">
+                       <span>收藏</span>
+                    </div>
+                    <div class="action-item">
+                        <img src="logos/历史.png" alt="历史" class="action-btn">
+                        <span>历史</span>
+                    </div>
+                    <div class="action-item">
+                        <img src="logos/创作中心.png" alt="创作中心" class="action-btn">
+                        <span>创作中心</span>
+                    </div>
+                </div>
+                <script>
+                    const collection=document.getElementById('go-collection');
+                    collection.addEventListener('click',function(){
+                        window.location.href='collection.html';
+                    });
+                </script>
+                <button onclick="showInfo()" class="submit">投稿</button>
+                <script>
+                    function showInfo(){
+                        alert("感谢你的关注！投稿后续会有哦~");
+                    }   
+                </script>
+            </div>
+        </div>
+
+
+
+        <div class="banner">
+            <div class="banner-slides">
+                <img src="img.2/photo.1.png" class="banner-item">
+                <img src="img.2/photo.2.png" class="banner-item">
+                <img src="img.2/photo.3.png" class="banner-item">
+                <img src="img.2/photo.4.png" class="banner-item">
+                <img src="img.2/photo.5.png" class="banner-item">
+            </div>
+        </div>
+        <div class="thumb-list">
+            <div class="thumb-item" data-index="0">
+                <img src="img.2/photo.18.png" alt="图片">
+            </div>
+            <div class="thumb-item" data-index="1">
+                <img src="img.2/photo.19.png" alt="图片">
+            </div>
+            <div class="thumb-item" data-index="2">
+                <img src="img.2/photo.20.png" alt="图片">
+            </div>
+            <div class="thumb-item" data-index="3">
+                <img src="img.2/photo.21.png" alt="图片">
+            </div>
+            <div class="thumb-item" data-index="4">
+                <img src="img.2/photo.22.png" alt="图片">
+            </div>
+        </div>
+         
+        <script>          
+            const bannerSlides = document.querySelectorAll('.banner-item');
+            const thumbItems = document.querySelectorAll('.thumb-item');
+
+            let currentIndex = 0;
+            let autoPlayTimer = null;
+            const autoPlaySpeed = 3000;
+
+            // 切换核心
+            function goToSlide(index) {
+                document.querySelector('.banner-slides').style.transform=`translateX(-${index * 100}%)`;
+                thumbItems.forEach(item => item.classList.remove('active'));
+                thumbItems[index].classList.add('active');
+                currentIndex=index;
+            }
+
+            // 自动下一张
+            function startAutoPlay() {
+                autoPlayTimer = setInterval(() => {//添加定时器
+                    currentIndex = (currentIndex + 1) % bannerSlides.length;
+                    goToSlide(currentIndex);
+                }, autoPlaySpeed);
+            }
+
+            function stopAutoPlay() {//清除定时器
+                clearInterval(autoPlayTimer);
+            }
+
+            // 默认第一张
+            goToSlide(0);
+            startAutoPlay();
+
+            // 下方小图
+            thumbItems.forEach((thumb, idx) => {
+                thumb.addEventListener('mouseover', ()=>{
+                    stopAutoPlay();
+                    goToSlide(idx);
+                });
+                thumb.addEventListener('mouseout', startAutoPlay);
+            });
+        </script>
+
+
+
+        <div class="filter-container">
+            <div class="filter-card" style="background:#f1cceb">
+                <h3 class="card-title">番剧索引</h3>
+                <div class="tag-group">
+                    <span>追番人数</span>
+                    <span>评分</span>
+                    <span>更新时间</span>
+                    <span>播放数量</span>
+                </div>
+            </div>
+
+                <!-- 类型风格（绿色） -->
+            <div class="filter-card" style="background:#d9f2d9">
+                <h3 class="card-title">类型风格</h3>
+                <div class="tag-group">
+                    <span>原创</span>
+                    <span>小说改</span>
+                    <span>特摄</span>
+                    <span>热血</span>
+                    <span>漫改</span>
+                    <span>游戏改</span>
+                    <span>后宫</span>
+                    <span>智斗</span>
+                </div>
+            </div>
+
+            <div class="filter-card" style="background:#cce5f5">
+                <h3 class="card-title">年份</h3>
+                <div class="tag-group">
+                    <span>2026</span>
+                    <span>2025</span>
+                    <span>2024</span>
+                    <span>2023</span>
+                    <span>2022</span>
+                    <span>2021</span>
+                    <span>2020</span>
+                    <span>2019</span>
+                    <span >2018</span>
+                </div>
+            </div>
+                
+            <div class="filter-card" style="background:#f8d7da">
+                <h3 class="card-title">热搜</h3>
+                <div class="tag-group">
+                    <span>判处勇者刑</span>
+                    <span >名侦探柯南</span>
+                </div>
+            </div>
+        </div>
+        <div class="sidebar">
+            <div class="sidebar-item">
+                <img src="logos/国创.png">
+                <span>国创</span>
+            </div>
+            <div class="sidebar-item">
+                <img src="logos/电影.png">
+                <span>电影</span>
+            </div>
+            <div class="sidebar-item">
+                <img src="logos/电视剧.png">
+                <span>电视剧</span>
+            </div>
+            <div class="sidebar-item">
+                <img src="logos/纪录片.png">
+                <span>纪录片</span>
+            </div>
+            <div class="sidebar-item">
+                <img src="logos/综艺.png">
+                <span>综艺</span>
+            </div>
+            <div class="sidebar-item">
+                <img src="logos/客服.png">
+                <span>客服</span>
+            </div>
+            <div class="sidebar-item back-to-top" id="backTop">
+                <img src="logos/顶部.png">
+                <span>顶部</span>
+            </div>
+        </div>
+        <script>
+            const backTopBtn=document.getElementById('backTop');
+            window.addEventListener('scroll',() => {
+                const scrollTop=document.documentElement.scrollTop || document.body.scrollTop;
+                if(scrollTop > 300)
+                {
+                    backTopBtn.classList.add('show');
+                }
+                else
+                {
+                    backTopBtn.classList.remove('show');
+                }
+            });
+            backTopBtn.addEventListener('click',() => {
+                window.scrollTo({
+                    top:0,
+                    behavior:'smooth'
+                });
+            });
+        </script>
+        <div style="clear:both; margin-top:30px; width:100%;"></div>
+        <iframe id="animeIframe" src="anime-series.html" frameborder="0" width="100%"></iframe>
+        <script>
+            document.getElementById('animeIframe').onload=function()
+            {
+                const iframe=this;
+                iframe.style.height=iframe.contentDocument.body.scrollHeight +'px';
+            };
+        </script>
+    </body>
+</html>
+        
+

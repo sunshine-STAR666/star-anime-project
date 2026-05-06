@@ -1,0 +1,1248 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="UTF-8">
+        <title>番剧</title>
+        <style>
+            body{
+                font-family:"微软雅黑",sans-serif;
+                margin:0;
+                padding:30px;
+                background:#fffefe;
+            }
+            .main{
+                display:flex;
+                flex-direction:column;
+                color:#242525;
+                margin:20px;
+                gap:20px;
+            }
+            .all-title{
+                display:flex;
+                align-items:center;
+                gap:20px;
+                margin-left:20px;
+            }
+            .logo{
+                width:32px;
+                height:32px;
+            }
+            .guess-list{
+                display:flex;
+                justify-content:flex-start;
+                gap:20px;
+                margin-left:30px;
+            }
+            .guess-item{
+                display:flex;
+                flex-direction:column;
+            }
+            .guess-item img{
+                height:160px;
+                width:270px;
+                border-radius:8px;
+                object-fit:cover;
+            }
+            .guess-item span{
+                width:fit-content;/*宽度贴合文字*/
+            }
+            .guess-item span:hover{
+                color:#00a1d6;
+                cursor:pointer;
+            }
+            .anime-button{
+                padding:10px 20px;
+                margin-left:auto;
+                border-radius:8px;
+            }
+            .anime-button:hover{
+                cursor:pointer;
+                transform:scale(1.1);
+                background:#aaadae;
+            }
+            .img-list{/*视频播放栏*/
+                display:flex;
+                flex-wrap:wrap;
+                gap:30px;
+                padding:10px 30px;
+                margin-bottom:30px;
+                overflow:hidden;
+            }
+            
+            .img-list img{/*视频*/
+                width:100%;
+                display:block;
+                border-radius:6px; 
+            }
+            .img-item{
+                display:flex;
+                flex-direction:column;
+                gap:5px;
+                flex-shrink:0;
+                width:180px;
+                border-radius:8px;
+                transition:all 0.3s ease;
+                position:relative;
+                overflow:hidden;
+            }
+            .img-item a{
+                text-decoration:none;
+                color:inherit;
+            }
+            .img-item:first-child{
+                transform-origin:left center;
+            }
+            .img-item span{
+                font-size:18px;
+                margin-top:10px;
+                margin-bottom:2px;
+            }
+            h3{
+                font-size:20;
+                color:rgb(40, 38, 38);
+                padding:20px;
+            }
+            h4{
+                color:rgb(40, 38, 38);
+                font-weight:block;
+            }
+            h5{
+                color:#9da1a2;
+            }
+            .date{
+                display:flex;
+                cursor:pointer;
+            }
+            .date span{
+                margin:10px 10px;
+                padding:5px;
+                font-size:16px;
+                color:#606465;
+                
+            }
+            .date span.active{
+                color:#00a1d6;
+            }
+            .wrap{
+                width:100%;
+                height:230px;
+                position:relative;
+                border-radius:8px;
+                overflow:hidden;
+                cursor:pointer;
+            }
+            .wrap img{
+                position:absolute;
+                top:0;
+                left:0;
+                width:100%;
+                height:100%;
+                object-fit:cover;
+                transition:all 0.4s ease;
+            }
+            .video img{
+                opacity:1;
+            }
+            .video-cover{
+                opacity:0;
+            }
+            .wrap:hover .video-cover{
+                opacity:1;
+            }
+            
+            .video-card{
+                display:flex;
+                object-fit:cover;
+                transition:all 0.3s ease;
+            }
+            
+            .score-mark{
+                position:absolute;
+                bottom:40px;
+                left:0;
+                right:0;
+                background:rgba(0,0,0,0.2);
+                padding:4px 12px;
+                text-align:right;
+                transition:opacity 0.3s ease;
+                border-radius:8px;
+            }
+            .score-mark p{
+                color:#fff;
+                font-size:24px;
+                font-weight:bold;
+                margin:0;
+            }
+            .info-bar{
+                display:flex;
+                position:absolute;
+                width:100%;
+                justify-content:flex-end;
+                align-items:center;
+                padding:10px 12px;
+                background:rgba(0,0,0,0.2);
+                color:#fff;
+                opacity:0;
+                transition:opacity 0.3s ease;
+                box-sizing:border-box;
+                bottom:40px;
+                gap:5px;
+                
+            }
+            .card-bottom{
+                display:flex;
+                
+            }
+            .info-bar img{
+                width:24px;
+                height:24px;
+                flex-shrink:0;
+            }
+            .collect-btn{
+                cursor:pointer;
+            }
+            .play-btn{
+                cursor:pointer;
+            }
+            .img-item:hover .score-mark{
+                opacity:0;
+            }
+            .img-item:hover .info-bar{
+                opacity:1;
+                pointer-events:auto;
+            }
+            .scroll-wrapper{
+                position:relative;
+                width:100%;
+                height:280px;
+                display:flex;
+                align-items:center;
+            }
+            .hot-list{
+                display:flex;
+                
+                scroll-behavior:smooth;/*滚动平滑过渡*/
+                scrollbar-width:none;/*隐藏垂直滚动条*/
+                gap:30px;
+                padding:10px 30px;
+                margin-bottom:30px;
+            }
+            .scroll-btn{
+                position:absolute;
+                top:50%;
+                transform:translateY(-50%);
+                width:40px;
+                height:40px;
+                border:none;
+                border-radius:50%;
+                background:rgba(0,0,0,0.6);
+                color:#fff;
+                font-size:20px;
+                cursor:pointer;
+                z-index:10;
+                transition:all 0.2s ease;
+            }
+            .left-btn{
+                left:10px;
+            }
+            .right-btn{
+                right:10px;
+            }
+            .recommend{
+                position:relative;
+                display:flex;
+                height:500px;
+                border-radius:12px;
+                justify-content:center;
+                align-items:center;
+                margin:30px;
+            }
+            .recommend-box{
+                display:flex;
+                background:#68119e;
+                border-radius:12px;
+                width:90%;
+                height:90%;
+                justify-content:flex-end;
+            }
+            .box-img{
+                position:absolute;
+                height:450px;
+                width:750px;
+                object-fit:cover;
+                border-radius:12px;
+                margin-left:15px;
+                top:0;
+                left:0;
+                transition:all 0.3s ease;
+            }
+            .introduce{
+                display:flex;
+                width:40%;
+                height:100%;
+                border-radius:12px;
+                flex-direction:column;
+                gap:20px;
+                position:relative;
+            }
+            .file{
+                margin-top:50px;
+                padding:20px;
+                color:rgb(236, 239, 241);
+            }
+            .file span{
+                font-weight:bold;
+                font-size:30px;
+            }
+            p{
+                font-size:18px;
+                line-height:1.5;
+            }
+            .thumb-slider{
+                display:flex;
+                width:90%;
+                overflow:hidden;
+                margin:0 10px 10px;
+                box-sizing:border-box;
+                position:absolute;
+                bottom:15px;
+                left:0;
+                right:0;
+            }
+            .thumb-list{
+                display:flex;
+                gap:12px;
+                transition:transform 0.3s ease;
+            }
+            .thumb-item{
+                width:150px;
+                height:90px;
+                border-radius:6px;
+                overflow:hidden;
+                flex-shrink:0;
+                cursor:pointer;
+                border:2px solid transparent;
+            }
+            .thumb-item.active{
+                border-color:#fff;
+            }
+            .thumb-item img{
+                width:1005;
+                height:100%;
+                object-fit:cover;
+            }
+            .like-list{
+                display:flex;
+                flex-wrap:wrap;
+                gap:30px;
+                padding:10px 30px;
+                margin-bottom:30px;
+                overflow:hidden;
+            }
+            .hot{
+                width:100%;
+                background:#ebb563;
+                height:400px;
+                display:flex;
+                justify-content:space-between;
+                gap:20px;
+            }
+            .hot-title{
+                display:flex;
+                width:15%;
+                height:100%;
+                flex-direction:column;
+                gap:10px;
+                background:#68119e;
+            }
+            .hot-title span{
+                font-size:20px;
+                font-weight:bold;
+                display:flex;
+                margin-top:300px;
+                justify-content:center;
+            }
+            .hot-title p{
+                font-size:14px;
+                display:flex;
+                justify-content:center;
+            }
+            .amazing-list{
+                display:flex;
+                flex-wrap:wrap;
+                gap:30px;
+                padding:10px 30px;
+                margin-bottom:30px;
+                overflow:hidden;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="main">
+            <div class="all-title">
+                <img src="logos/爱心.png" class="logo">
+                <h2>猜你想追</h2>
+                <button class="anime-button">我的追番</button>
+            </div>
+            
+            <div class="guess-list">
+                <div class="guess-item">
+                    <img src="img.2/photo.23.jpg">
+                    <span>名侦探柯南（中配）</span>
+                    <h5>小学生的侦探生活</h5>
+                </div>
+                <div class="guess-item">
+                    <img src="img.2/photo.24.jpg">
+                    <span>鬼灭之刃，刀匠村篇</span>
+                    <h5>信念锻刀，尽斩恶鬼</h5>
+                </div>
+            </div>
+            <div class="all-title">
+                <img src="logos/时间.png" class="logo">
+                <h2>新番时间表</h2>
+                <div class="date">
+                    <span data-day="0">最近更新</span>
+                    <span data-day="1">星期一</span>
+                    <span data-day="2">星期二</span>
+                    <span data-day="3">星期三</span>
+                    <span data-day="4">星期四</span>
+                    <span data-day="5">星期五</span>
+                    <span data-day="6">星期六</span>
+                    <span data-day="7">星期日</span>
+                </div>
+            </div>
+            <!--<div class="img-list">
+                <div class="img-item">
+                    <a href="detail-page.html" target="_blank">
+                        <div class="wrap">
+                            <img src="img.2/photo.6.png" class="video-card">
+                            <img src="good.jpg" class="video-cover">
+                        </div>
+                    </a>
+                    <span>正相反的你与我</span>
+                </div>
+                <div class="img-item">
+                    <a
+                    href="detail-page2.html" target="_blank">
+                        <div class="wrap">
+                            <img src="img.2/photo.7.png" class="video-card">
+                            <img src="good.jpg" class="video-cover">
+                        </div>
+                    </a>
+                    <span>假面骑士ZZZ</span>
+                </div>
+                <div class="img-item">
+                    <a
+                    href="detail-page3.html" target="_blank">
+                        <div class="wrap">
+                            <img src="img.2/photo.8.png" class="video-card">
+                            <img src="good.jpg" class="video-cover">
+                        </div>
+                    </a>
+                    <span>假面骑士ZZZ(中配)</span>
+                </div>    
+                <div class="img-item">
+                    <a
+                    href="detail-page4.html" target="_blank">
+                        <div class="wrap">
+                            <img src="img.2/photo.9.png" class="video-card">
+                            <img src="good.jpg" class="video-cover">
+                        </div>
+                    </a>
+                    <span>名侦探柯南</span>
+                </div>    
+                <div class="img-item">
+                    <a
+                        href="detail-page.html" target="_blank">
+                        <div class="wrap">
+                            <img src="img.2/photo.10.png" class="video-card">
+                            <img src="good.jpg" class="video-cover">
+                        </div>
+                    </a>
+                    <span>名侦探柯南(中配)</span>
+                </div>    
+                <div class="img-item">
+                    <a
+                        href="detail-page.html"
+                        target="_blank">
+                        <div class="wrap">
+                            <img src="img.2/photo.11.png" class="video-card">
+                            <img src="good.jpg" class="video-cover">
+                        </div>
+                    </a>
+                    <span>开启奇幻世界</span>
+                </div>    
+            </div>-->
+            <div class="img-list">
+
+            </div>
+            <div class="all-title">
+                <img src="logos/推荐.png" class="logo">
+                <h2>番剧热播榜</h2>
+            </div>
+            <div class="scroll-wrapper">
+                <button class="scroll-btn left-btn">&lt;</button>
+                <div class="hot-list"></div>
+                <button class="scroll-btn right-btn">&gt;</button>
+            </div>
+            <!--<div class="img-list">
+                <div class="img-item">
+                    <a
+                    href="detail-page.html"
+                    target="_blank">
+                    <div class="wrap">
+                        <img src="img.2/photo.12.png" class="video-card">
+                        <img src="good.jpg" class="video-cover">
+                    </div>
+                    </a>
+                    <span>判处勇者刑</span>
+                </div>
+                <div class="img-item">
+                    <a
+                    href="detail-page2.html"
+                    target="_blank">
+                    <div class="wrap">
+                            <img src="img.2/photo.7.png" class="video-card">
+                            <img src="good.jpg" class="video-cover">
+                        </div>
+                    </a>
+                    <span>正相反的你与我</span>
+                </div>
+                <div class="img-item">
+                    <a
+                        href="detail-page3.html"
+                        target="_blank">
+                        <div class="wrap">
+                            <img src="img.2/photo.11.png" class="video-card">
+                            <img src="good.jpg" class="video-cover">
+                        </div>
+                    </a>
+                    <span>假面骑士ZZZ</span>
+                </div>    
+                <div class="img-item">
+                    <a
+                        href="detail-page4.html"
+                        target="_blank">
+                       <div class="wrap">
+                            <img src="img.2/photo.6.png" class="video-card">
+                            <img src="good.jpg" class="video-cover">
+                        </div>
+                    </a>
+                    <span>名侦探柯南</span>
+                </div>    
+                <div class="img-item">
+                    <a
+                        href="detail-page.html"
+                        target="_blank">
+                        <div class="wrap">
+                            <img src="img.2/photo.9.png" class="video-card">
+                            <img src="good.jpg" class="video-cover">
+                        </div>
+                    </a>
+                    <span>梦想协奏曲</span>
+                </div>    
+                <div class="img-item">
+                    <a
+                        href="detail-page.html"
+                        target="_blank">
+                        <div class="wrap">
+                            <img src="img.2/photo.10.png" class="video-card">
+                            <img src="good.jpg" class="video-cover">
+                        </div>
+                    </a>
+                    <span>开启奇幻世界</span>
+                </div>    
+            </div>-->
+            <div class="all-title">
+                <img src="logos/新热.png" class="logo">
+                <h2>新热推荐</h2>
+            </div>
+            <div class="recommend">
+                <img class="box-img" id="rec-big-img" src="" alt="封面">
+                <div class="recommend-box">
+                    <div class="introduce">
+                        <div class="file">
+                            <span id="rec-name-score"></span>
+                            <p id="rec-intro"></p>
+                        </div>
+                        <div class="thumb-slider">
+                            <div class="thumb-list" id="thumb-list"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="all-title">
+                <h2>猜你喜欢</h2>
+            </div>
+            <div class="like-list">
+                <!--<div class="img-item">
+                    <a
+                    href="detail-page.html"
+                    target="_blank">
+                    <div class="wrap">
+                        <img src="img.2/photo.25.jpg" class="video-card">
+                        <img src="good.jpg" class="video-cover">
+                    </div>
+                    </a>
+                    <span>夏日重现</span>
+                </div>
+                <div class="img-item">
+                    <a
+                    href="detail-page2.html"
+                    target="_blank">
+                    <div class="wrap">
+                            <img src="img.2/photo.26.jpg" class="video-card">
+                            <img src="good.jpg" class="video-cover">
+                        </div>
+                    </a>
+                    <span>某科学家的电磁炮</span>
+                </div>
+                <div class="img-item">
+                    <a
+                        href="detail-page3.html"
+                        target="_blank">
+                        <div class="wrap">
+                            <img src="img.2/photo.11.png" class="video-card">
+                            <img src="good.jpg" class="video-cover">
+                        </div>
+                    </a>
+                    <span>假面骑士ZZZ</span>
+                </div>    
+                <div class="img-item">
+                    <a
+                        href="detail-page4.html"
+                        target="_blank">
+                       <div class="wrap">
+                            <img src="img.2/photo.6.png" class="video-card">
+                            <img src="good.jpg" class="video-cover">
+                        </div>
+                    </a>
+                    <span>名侦探柯南</span>
+                </div>    
+                <div class="img-item">
+                    <a
+                        href="detail-page.html"
+                        target="_blank">
+                        <div class="wrap">
+                            <img src="img.2/photo.9.png" class="video-card">
+                            <img src="good.jpg" class="video-cover">
+                        </div>
+                    </a>
+                    <span>梦想协奏曲</span>
+                </div>    
+                <div class="img-item">
+                    <a
+                        href="detail-page.html"
+                        target="_blank">
+                        <div class="wrap">
+                            <img src="img.2/photo.10.png" class="video-card">
+                            <img src="good.jpg" class="video-cover">
+                        </div>
+                    </a>
+                    <span>开启奇幻世界</span>
+                </div>-->    
+            </div>
+            <div class="hot">
+                <div class="hot-title">
+                    <span>热门奇幻番剧榜</span>
+                    <p>每小时更新</p>
+                </div>
+                <div class="hot-content">
+                    <div class="amazing-list">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script>
+            document.addEventListener('DOMContentLoaded',() => 
+            {
+                const daySpans=document.querySelectorAll('.date span');
+                const imgList=document.querySelector('.img-list');
+                const baseUrl="http://47.107.55.106:8080/api/anemi/schedule/";
+                daySpans[0].classList.add('active');
+                loadData(1);
+                daySpans.forEach(span => {
+                    span.addEventListener('click',function(){
+                        daySpans.forEach(s => s.classList.remove('active'));
+                        this.classList.add('active');
+                        const day=this.dataset.day;
+                        if(day==="0")
+                        {
+                            loadData(1);
+                        }
+                        else
+                        {
+                            loadData(day);
+                        }
+                    });
+                });
+                function loadData(week){
+                    imgList.innerHTML='<div style="padding:40px;text-align:center;color:#999;">加载中...</div>';
+                    fetch(baseUrl + week)
+                    .then(res => res.json())
+                    .then(result => {
+                        if(result.code !== 200) throw new Error("请求失败");
+                        renderAnime(result.data);
+                    })
+                    .catch(err => {
+                        console.error(err);
+                        imgList.innerHTML = '<div style="padding:40px;text-align:center;color:#999;">加载失败，请稍后重试</div>';
+                    });
+                }
+                function renderAnime(animeList){
+                    imgList.innerHTML='';
+                    if(!animeList || animeList.length === 0){
+                        imgList.innerHTML = '<div style="padding:40px;text-align:center;color:#999;">当日暂无新番更新~</div>';
+                        return;
+                    }
+                    animeList.forEach(anime => {
+                        let card =document.createElement('div');
+                        card.className='img-item';
+                        card.innerHTML=`
+                            <div class="wrap">
+                                <a href="detail-page.html?id=${anime.id}"target="_blank">
+                                    <img src="${anime.photo}" class="video-card" alt="${anime.name}">
+                                    <img src="good.jpg" class="video-cover" alt="敬请期待">
+                                </a>
+                            </div>
+                            
+                            <div class="score-mark">
+                                <p>${anime.score}</p>
+                            </div>
+                            <div class="info-bar">
+                                <img src="logos/关注.png" class="collect-btn">
+                                <img src="logos/播放.png" class="play-btn">
+                            </div>
+                            <span>${anime.name}</span>
+                        `;
+                        imgList.appendChild(card);
+                    });
+                    bindHoverEffect();
+                    bindHoverInfoBar();
+                }
+                function bindHoverEffect(){
+                    const card_config={
+                    scaleX:2,
+                    offset:100,
+                    zIndex:10,
+                    extraSpace:180
+                    }
+                    const allLists=document.querySelectorAll('.img-list');
+                    allLists.forEach(list => {
+                        const cards=list.querySelectorAll('.img-item');
+                        cards.forEach((card,index)=>{
+                        card.addEventListener('mouseenter',() => {
+                            cards.forEach((item,i) => {
+                                if(index === 0)
+                                {   
+                                    if(i === 0)
+                                    {
+                                        item.style.transform=`scaleX(${card_config.scaleX})`;
+                                        item.style.zIndex=card_config.zIndex;
+                                    }
+                                    else
+                                    {
+                                        item.style.transform=`translateX(${card_config.extraSpace}px)`;
+                                    }
+                                }
+                                else
+                                {
+                                    if(i<index)
+                                    {
+                                        item.style.transform=`translateX(-${card_config.offset}px)`;
+                                    }
+                                    else if(i > index)
+                                    {
+                                        item.style.transform=`translateX(${card_config.offset}px)`;
+                                    }
+                                    else
+                                    {
+                                        item.style.transform=`scaleX(${card_config.scaleX})`;
+                                        item.style.zIndex=card_config.zIndex;
+                                    }
+                                }
+                            });
+                        });
+                            card.addEventListener('mouseleave',() => {
+                                cards.forEach(item => {
+                                    item.style.transform='';
+                                    item.style.zIndex='';
+                                });
+                            });
+                        });        
+                    });
+                }
+                function bindHoverInfoBar(){
+                    const cards =document.querySelectorAll('.img-item');
+                    cards.forEach(card => {
+                        const collectBtn=card.querySelector('.collect-btn');
+                        const playBtn=card.querySelector('.play-btn');
+                        if (!collectBtn || !playBtn) return;
+                        collectBtn.addEventListener('click',function(e){
+                            e.stopPropagation();
+                            const isCollected = this.classList.toggle('collected');
+                            if(isCollected)
+                            {
+                                this.src='logos/已关注.png';
+                                alert('已收藏');
+                            }
+                            else{
+                                this.src='logos/关注.png';
+                                alert('取消收藏');
+                            }
+                        });
+                        playBtn.addEventListener('click',function(e){
+                            e.stopPropagation();
+                            const link=card.querySelector('a').href;
+                            window.open(link,'blank');
+                        });
+                    });
+                }
+            });
+        </script>    
+        <script>
+            document.addEventListener('DOMContentLoaded',() => {
+                const hot_watch='http://47.107.55.106:8080/api/anemi/hotWatch';
+                const container=document.querySelector('.hot-list');
+                function renderAnimeCards(animeList){
+                    container.innerHTML='';
+                    if(!animeList || animeList.length===0)
+                    {
+                        container.innerHTML='<div style="padding:40px;text-align:center;color:#999;>暂无数据~</div>';
+                        return;
+                    }
+                    const group1=animeList.slice(0,6);
+                    const group2=animeList.slice(6,8)
+                    group1.forEach(anime => {
+                        let card=document.createElement('div');
+                        card.className='img-item group1'
+                        card.innerHTML=`
+                            <div class="wrap">
+                                <a href="detail-page.html" target="_blank">
+                                    <img src="${anime.photo}" class="video-card"alt="${anime.name}">
+                                    <img src="good.jpg"class="video-cover" alt="敬请期待">
+                                </a>
+                            </div>
+                            <div class="score-mark">
+                                <p>${anime.score}</p>
+                            </div>
+                            <div class="info-bar">
+                                <img src="logos/关注.png"class="collect-btn">
+                                <img src="logos/播放.png"class="play-btn">
+                            </div>
+                            <span>${anime.name}</span>
+                        `;
+                        container.appendChild(card);
+                    });
+                    group2.forEach(anime => {
+                        let card=document.createElement('div');
+                        card.className='img-item group2'
+                        card.style.display='none';
+                        card.innerHTML=`
+                            <div class="wrap">
+                                <a href="detail-page.html" target="_blank">
+                                    <img src="${anime.photo}" class="video-card"alt="${anime.name}">
+                                    <img src="good.jpg"class="video-cover" alt="敬请期待">
+                                </a>
+                            </div>
+                            <div class="score-mark">
+                                <p>${anime.score}</p>
+                            </div>
+                            <div class="info-bar">
+                                <img src="logos/关注.png"class="collect-btn">
+                                <img src="logos/播放.png"class="play-btn">
+                            </div>
+                            <span>${anime.name}</span>
+                        `;
+                        container.appendChild(card);
+                    });
+                    const leftBtn=document.querySelector('.left-btn');
+                    const rightBtn=document.querySelector('.right-btn');
+                    const group1Cards=document.querySelector('.group1');
+                    const group2Cards=document.querySelector('.group2');
+                    leftBtn.style.opacity='0';
+                    rightBtn.addEventListener('click',()=>{
+                        group1Cards.forEach(card=> card.style.display='none');
+                        group2Cards.forEach(card => card.style.display='block');
+                        rightBtn.style.opacity='0';
+                        leftBtn.style.opacity='1';
+                        bindHoverEffect();
+                    });
+                    leftBtn.addEventListener('click',()=>{
+                        group1Cards.forEach(card=> card.style.display='block');
+                        group2Cards.forEach(card => card.style.display='none');
+                        rightBtn.style.opacity='1';
+                        leftBtn.style.opacity='0';
+                        bindHoverEffect();
+                    });
+                    bindHoverEffect();
+                    bindHoverInfoBar();
+                }
+                async function loadHotWatchList(){
+                    try{
+                        const res = await fetch(hot_watch);
+                        const data= await res.json();
+                        if(data.code===200){
+                            const hotListContainer=document.querySelector('.hot-list');
+                            if(hotListContainer){
+                                renderAnimeCards(data.data,hotListContainer);
+                            }
+                        }
+                    }
+                    catch(err){
+                        console.error('加载热播榜失败：',err);
+                        const hotListContainer=document.querySelector('.hot-list');
+                        if(hotListContainer){
+                            hotListContainer.innerHTML='<div style="padding:40px;text-align:center;color:#999;">加载失败,请稍后再试~</div>';
+                        }
+                    }
+                }
+                function bindHoverEffect(){
+                    const card_config={
+                        scaleX:2,
+                        offset:100,
+                        zIndex:10,
+                        extraSpace:180
+                    }
+                    const allLists=document.querySelectorAll('.hot-list');
+                    allLists.forEach(list => {
+                        const cards=list.querySelectorAll('.img-item');
+                        cards.forEach((card,index)=>{
+                        card.addEventListener('mouseenter',() => {
+                            cards.forEach((item,i) => {
+                                if(index === 0)
+                                {   
+                                    if(i === 0)
+                                    {
+                                        item.style.transform=`scaleX(${card_config.scaleX})`;
+                                        item.style.zIndex=card_config.zIndex;
+                                    }
+                                    else
+                                    {
+                                        item.style.transform=`translateX(${card_config.extraSpace}px)`;
+                                    }
+                                }
+                                else
+                                {
+                                    if(i<index)
+                                    {
+                                        item.style.transform=`translateX(-${card_config.offset}px)`;
+                                    }
+                                    else if(i > index)
+                                    {
+                                        item.style.transform=`translateX(${card_config.offset}px)`;
+                                    }
+                                    else
+                                    {
+                                        item.style.transform=`scaleX(${card_config.scaleX})`;
+                                        item.style.zIndex=card_config.zIndex;
+                                    }
+                                }
+                            });
+                        });
+                            card.addEventListener('mouseleave',() => {
+                                cards.forEach(item => {
+                                    item.style.transform='';
+                                    item.style.zIndex='';
+                                });
+                            });
+                        });        
+                    });
+                }
+                function bindHoverInfoBar(){
+                    const cards =document.querySelectorAll('.img-item');
+                    cards.forEach(card => {
+                        const collectBtn=card.querySelector('.collect-btn');
+                        const playBtn=card.querySelector('.play-btn');
+                        if (!collectBtn || !playBtn) return;
+                        collectBtn.addEventListener('click',function(e){
+                            e.stopPropagation();
+                            const isCollected = this.classList.toggle('collected');
+                            if(isCollected)
+                            {
+                                this.src='logos/已关注.png';
+                                alert('已收藏');
+                            }
+                            else{
+                                this.src='logos/关注.png';
+                                alert('取消收藏');
+                            }
+                        });
+                        playBtn.addEventListener('click',function(e){
+                            e.stopPropagation();
+                            const link=card.querySelector('a').href;
+                            window.open(link,'blank');
+                        });
+                    });
+                }
+                loadHotWatchList();
+            });
+        </script>
+        <script>
+            document.addEventListener('DOMContentLoaded',async function(){
+                const API_URL='http://47.107.55.106:8080/api/anemi/hotRecommend';
+                let recommendData=[];
+                let currentIndex=0;
+                const bigImg=document.getElementById('rec-big-img');
+                const nameScore=document.getElementById('rec-name-score');
+                const intro=document.getElementById('rec-intro');
+                const thumbList=document.getElementById('thumb-list');
+                async function loadRecommendData(){
+                    try{
+                        const res=await fetch(API_URL);
+                        const data=await res.json();
+                        if(data.code===200)
+                        {
+                            recommendData=data.data;
+                            renderThumbList();
+                            switchToIndex(0);
+                        }
+                    }
+                    catch(err)
+                    {
+                        console.error('加载新热推荐失败：',err);
+                    }
+                }
+                function switchToIndex(index){
+                    const maxIndex=recommendData.length-1;
+                    index=index % recommendData.length;
+                    if(index < 0)
+                    {
+                        index=recommendData.length + index;
+                    }
+                    currentIndex=index;
+                    const item=recommendData[index];
+                    bigImg.src=item.photo;
+                    nameScore.innerText=`${item.name} ${item.score}`;
+                    intro.innerText=item.intro;
+                    document.querySelectorAll('.thumb-item').forEach((el,i)=>{
+                        el.classList.toggle('active',i===index);
+                    });
+                    const offset=index*(150+12);
+                    thumbList.style.transform=`translateX(-${offset}px)`;
+                }
+                function renderThumbList(){
+                    thumbList.innerHTML='';
+                    recommendData.forEach((item,index)=>{
+                        const thumb=document.createElement('div');
+                        thumb.className=`thumb-item ${index===0?'active':''}`;
+                        thumb.innerHTML=`<img src="${item.photo}" alt="${item.name}">`;
+                        thumb.onclick=()=>{
+                            if(index === recommendData.length-1)
+                            {
+                                switchToIndex(0);
+                            }
+                            else
+                            {
+                                switchToIndex(index);
+                            }
+                        }
+                        thumbList.appendChild(thumb);
+                    });
+                }
+                loadRecommendData();
+            });
+        </script>
+        <script>
+            document.addEventListener('DOMContentLoaded',() => {
+                const you_like='http://47.107.55.106:8080/api/anemi/guess';
+                const container=document.querySelector('.like-list');
+                function renderAnimeCards(animeList){
+                    container.innerHTML='';
+                    if(!animeList || animeList.length===0)
+                    {
+                        container.innerHTML='<div style="padding:40px;text-align:center;color:#999;">暂无数据</div>';
+                        return;
+                    }
+                    animeList.forEach(anime=>{
+                        let card=document.createElement('div');
+                        card.className='img-item'
+                        card.innerHTML=`
+                            <div class="wrap">
+                                <a href="detail-page.html" target="_blank">
+                                    <img src="${anime.photo}" class="video-card" alt="${anime.name}">
+                                    <img src="good.jpg" class="video-cover" alt="敬请期待">
+                                </a>
+                            </div>
+                            <div class="score-mark">
+                                <p>${anime.score}</p>
+                            </div>
+                            <div class="info-bar">
+                                <img src="logos/关注.png" class="collect-btn">
+                                <img src="logos/播放.png" class="play-btn">
+                            </div>
+                            <span>${anime.name}</span>
+                        `;
+                        container.appendChild(card);
+                    });
+                    bindHoverEffect();
+                    bindHoverInfoBar();
+                }
+                async function loadYouLikeList(){
+                    try{
+                        const res = await fetch(you_like);
+                        const data = await res.json();
+                        if(data.code===200){
+                            const likeListContainer=document.querySelector('.like-list');
+                            if(likeListContainer){
+                                renderAnimeCards(data.data,likeListContainer);
+                            }
+                        }
+                    }
+                    catch(err){
+                        console.error('加载猜你喜欢失败：',err);
+                        const likeListContainer=document.querySelector('.like-list');
+                        if(likeListContainer){
+                            likeListContainer.innerHTML='<div style="padding:40px;text-align:center;color:#999;">加载失败，请稍后再试</div>'
+                        }
+                    }
+                }
+                function bindHoverEffect(){
+                    const card_config={
+                    scaleX:2,
+                    offset:100,
+                    zIndex:10,
+                    extraSpace:180
+                    }
+                    const allLists=document.querySelectorAll('.like-list');
+                    allLists.forEach(list => {
+                        const cards=list.querySelectorAll('.img-item');
+                        cards.forEach(card =>{
+                        card.addEventListener('mouseenter',function(){
+                            const rowTop=this.offsetTop;
+                            const rowCards=Array.from(cards).filter(item=>{
+                                return item.offsetTop ===rowTop;
+                            });
+                            const index=rowCards.indexOf(this);
+                            rowCards.forEach((item,i) => {
+                                if(index === 0)
+                                {   
+                                    if(i === 0)
+                                    {
+                                        item.style.transform=`scaleX(${card_config.scaleX})`;
+                                        item.style.zIndex=card_config.zIndex;
+                                    }
+                                    else
+                                    {
+                                        item.style.transform=`translateX(${card_config.extraSpace}px)`;
+                                    }
+                                }
+                                else
+                                {
+                                    if(i<index)
+                                    {
+                                        item.style.transform=`translateX(-${card_config.offset}px)`;
+                                    }
+                                    else if(i > index)
+                                    {
+                                        item.style.transform=`translateX(${card_config.offset}px)`;
+                                    }
+                                    else
+                                    {
+                                        item.style.transform=`scaleX(${card_config.scaleX})`;
+                                        item.style.zIndex=card_config.zIndex;
+                                    }
+                                }
+                            });
+                        });
+                            card.addEventListener('mouseleave',function() {
+                                const rowTop=this.offsetTop;
+                                const rowCards=Array.from(cards).filter(item =>{
+                                    return item.offsetTop ===rowTop;
+                                });
+                                rowCards.forEach(item => {
+                                    item.style.transform='';
+                                    item.style.zIndex='';
+                                });
+                            });
+                        });        
+                    });
+                }
+                function bindHoverInfoBar(){
+                    const cards =document.querySelectorAll('.img-item');
+                    cards.forEach(card => {
+                        const collectBtn=card.querySelector('.collect-btn');
+                        const playBtn=card.querySelector('.play-btn');
+                        if (!collectBtn || !playBtn) return;
+                        collectBtn.addEventListener('click',function(e){
+                            e.stopPropagation();
+                            const isCollected = this.classList.toggle('collected');
+                            if(isCollected)
+                            {
+                                this.src='logos/已关注.png';
+                                alert('已收藏');
+                            }
+                            else{
+                                this.src='logos/关注.png';
+                                alert('取消收藏');
+                            }
+                        });
+                        playBtn.addEventListener('click',function(e){
+                            e.stopPropagation();
+                            const link=card.querySelector('a').href;
+                            window.open(link,'blank');
+                        });
+                    });
+                }
+                loadYouLikeList();
+            })
+        </script>
+        <script>
+            document.addEventListener('DOMContentLoaded',() => {
+                const amazing='http://47.107.55.106:8080/api/anemi/ranking/1';
+                const container=document.querySelector('.amazing-list');
+                function renderAnimeCards(animeList){
+                    container.innerHTML='';
+                    if(!animeList || animeList.length===0)
+                    {
+                        container.innerHTML='<div style="padding:40px;text-align:center;color:#999;">暂无数据</div>';
+                        return;
+                    }
+                    animeList.forEach(anime=>{
+                        let card=document.createElement('div');
+                        card.className='img-item'
+                        card.innerHTML=`
+                            <div class="wrap">
+                                <a href="detail-page.html" target="_blank">
+                                    <img src="${anime.photo}" class="video-card" alt="${anime.name}">
+                                    <img src="good.jpg" class="video-cover" alt="敬请期待">
+                                </a>
+                            </div>
+                            <div class="score-mark">
+                                <p>${anime.score}</p>
+                            </div>
+                            <div class="info-bar">
+                                <img src="logos/关注.png" class="collect-btn">
+                                <img src="logos/播放.png" class="play-btn">
+                            </div>
+                            <span>${anime.name}</span>
+                        `;
+                        container.appendChild(card);
+                    });
+                    bindHoverEffect();
+                    bindHoverInfoBar();
+                }
+                async function loadYouLikeList(){
+                    try{
+                        const res = await fetch(amazing);
+                        const data = await res.json();
+                        if(data.code===200){
+                            const likeListContainer=document.querySelector('.amazing-list');
+                            if(likeListContainer){
+                                renderAnimeCards(data.data,likeListContainer);
+                            }
+                        }
+                    }
+                    catch(err){
+                        console.error('加载猜你喜欢失败：',err);
+                        const likeListContainer=document.querySelector('.amazing-list');
+                        if(likeListContainer){
+                            likeListContainer.innerHTML='<div style="padding:40px;text-align:center;color:#999;">加载失败，请稍后再试</div>'
+                        }
+                    }
+                }
+            });
+        </script>
+    </body>
+</html>
