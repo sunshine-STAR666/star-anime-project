@@ -367,13 +367,40 @@
                 display:flex;
                 justify-content:center;
             }
+            .hot-contain{
+                display:flex;
+                width:75%;
+                justify-content:flex-start;
+            }
             .amazing-list{
                 display:flex;
-                flex-wrap:wrap;
-                gap:30px;
+                flex-wrap:nowrap;
+                gap:20px;
                 padding:10px 30px;
                 margin-bottom:30px;
+                overflow:hidden;    
+            }
+            .view-port{
+                width:1100px;
                 overflow:hidden;
+            }
+            .prev-btn .next-btn{
+                position:absolute;
+                top:50%;
+                transform:translateY(-50%);
+                width:40px;
+                height:120px;
+                border:none;
+                background:#eee;
+                cursor:pointer;
+                font-size:20px;
+                border-radius:4px;
+                z-index:10;
+            }
+            .slider-wrap{
+                position:relative;
+                width:1100px;
+                margin:0 auto;
             }
         </style>
     </head>
@@ -382,7 +409,7 @@
             <div class="all-title">
                 <img src="logos/爱心.png" class="logo">
                 <h2>猜你想追</h2>
-                <button class="anime-button">我的追番</button>
+                <a href="collection.html#anime" target="_blank"><button class="anime-button">我的追番</button></a>
             </div>
             
             <div class="guess-list">
@@ -411,68 +438,7 @@
                     <span data-day="7">星期日</span>
                 </div>
             </div>
-            <!--<div class="img-list">
-                <div class="img-item">
-                    <a href="detail-page.html" target="_blank">
-                        <div class="wrap">
-                            <img src="img.2/photo.6.png" class="video-card">
-                            <img src="good.jpg" class="video-cover">
-                        </div>
-                    </a>
-                    <span>正相反的你与我</span>
-                </div>
-                <div class="img-item">
-                    <a
-                    href="detail-page2.html" target="_blank">
-                        <div class="wrap">
-                            <img src="img.2/photo.7.png" class="video-card">
-                            <img src="good.jpg" class="video-cover">
-                        </div>
-                    </a>
-                    <span>假面骑士ZZZ</span>
-                </div>
-                <div class="img-item">
-                    <a
-                    href="detail-page3.html" target="_blank">
-                        <div class="wrap">
-                            <img src="img.2/photo.8.png" class="video-card">
-                            <img src="good.jpg" class="video-cover">
-                        </div>
-                    </a>
-                    <span>假面骑士ZZZ(中配)</span>
-                </div>    
-                <div class="img-item">
-                    <a
-                    href="detail-page4.html" target="_blank">
-                        <div class="wrap">
-                            <img src="img.2/photo.9.png" class="video-card">
-                            <img src="good.jpg" class="video-cover">
-                        </div>
-                    </a>
-                    <span>名侦探柯南</span>
-                </div>    
-                <div class="img-item">
-                    <a
-                        href="detail-page.html" target="_blank">
-                        <div class="wrap">
-                            <img src="img.2/photo.10.png" class="video-card">
-                            <img src="good.jpg" class="video-cover">
-                        </div>
-                    </a>
-                    <span>名侦探柯南(中配)</span>
-                </div>    
-                <div class="img-item">
-                    <a
-                        href="detail-page.html"
-                        target="_blank">
-                        <div class="wrap">
-                            <img src="img.2/photo.11.png" class="video-card">
-                            <img src="good.jpg" class="video-cover">
-                        </div>
-                    </a>
-                    <span>开启奇幻世界</span>
-                </div>    
-            </div>-->
+            
             <div class="img-list">
 
             </div>
@@ -485,74 +451,6 @@
                 <div class="hot-list"></div>
                 <button class="scroll-btn right-btn">&gt;</button>
             </div>
-            <!--<div class="img-list">
-                <div class="img-item">
-                    <a
-                    href="detail-page.html"
-                    target="_blank">
-                    <div class="wrap">
-                        <img src="img.2/photo.12.png" class="video-card">
-                        <img src="good.jpg" class="video-cover">
-                    </div>
-                    </a>
-                    <span>判处勇者刑</span>
-                </div>
-                <div class="img-item">
-                    <a
-                    href="detail-page2.html"
-                    target="_blank">
-                    <div class="wrap">
-                            <img src="img.2/photo.7.png" class="video-card">
-                            <img src="good.jpg" class="video-cover">
-                        </div>
-                    </a>
-                    <span>正相反的你与我</span>
-                </div>
-                <div class="img-item">
-                    <a
-                        href="detail-page3.html"
-                        target="_blank">
-                        <div class="wrap">
-                            <img src="img.2/photo.11.png" class="video-card">
-                            <img src="good.jpg" class="video-cover">
-                        </div>
-                    </a>
-                    <span>假面骑士ZZZ</span>
-                </div>    
-                <div class="img-item">
-                    <a
-                        href="detail-page4.html"
-                        target="_blank">
-                       <div class="wrap">
-                            <img src="img.2/photo.6.png" class="video-card">
-                            <img src="good.jpg" class="video-cover">
-                        </div>
-                    </a>
-                    <span>名侦探柯南</span>
-                </div>    
-                <div class="img-item">
-                    <a
-                        href="detail-page.html"
-                        target="_blank">
-                        <div class="wrap">
-                            <img src="img.2/photo.9.png" class="video-card">
-                            <img src="good.jpg" class="video-cover">
-                        </div>
-                    </a>
-                    <span>梦想协奏曲</span>
-                </div>    
-                <div class="img-item">
-                    <a
-                        href="detail-page.html"
-                        target="_blank">
-                        <div class="wrap">
-                            <img src="img.2/photo.10.png" class="video-card">
-                            <img src="good.jpg" class="video-cover">
-                        </div>
-                    </a>
-                    <span>开启奇幻世界</span>
-                </div>    
-            </div>-->
             <div class="all-title">
                 <img src="logos/新热.png" class="logo">
                 <h2>新热推荐</h2>
@@ -574,82 +472,20 @@
             <div class="all-title">
                 <h2>猜你喜欢</h2>
             </div>
-            <div class="like-list">
-                <!--<div class="img-item">
-                    <a
-                    href="detail-page.html"
-                    target="_blank">
-                    <div class="wrap">
-                        <img src="img.2/photo.25.jpg" class="video-card">
-                        <img src="good.jpg" class="video-cover">
-                    </div>
-                    </a>
-                    <span>夏日重现</span>
-                </div>
-                <div class="img-item">
-                    <a
-                    href="detail-page2.html"
-                    target="_blank">
-                    <div class="wrap">
-                            <img src="img.2/photo.26.jpg" class="video-card">
-                            <img src="good.jpg" class="video-cover">
-                        </div>
-                    </a>
-                    <span>某科学家的电磁炮</span>
-                </div>
-                <div class="img-item">
-                    <a
-                        href="detail-page3.html"
-                        target="_blank">
-                        <div class="wrap">
-                            <img src="img.2/photo.11.png" class="video-card">
-                            <img src="good.jpg" class="video-cover">
-                        </div>
-                    </a>
-                    <span>假面骑士ZZZ</span>
-                </div>    
-                <div class="img-item">
-                    <a
-                        href="detail-page4.html"
-                        target="_blank">
-                       <div class="wrap">
-                            <img src="img.2/photo.6.png" class="video-card">
-                            <img src="good.jpg" class="video-cover">
-                        </div>
-                    </a>
-                    <span>名侦探柯南</span>
-                </div>    
-                <div class="img-item">
-                    <a
-                        href="detail-page.html"
-                        target="_blank">
-                        <div class="wrap">
-                            <img src="img.2/photo.9.png" class="video-card">
-                            <img src="good.jpg" class="video-cover">
-                        </div>
-                    </a>
-                    <span>梦想协奏曲</span>
-                </div>    
-                <div class="img-item">
-                    <a
-                        href="detail-page.html"
-                        target="_blank">
-                        <div class="wrap">
-                            <img src="img.2/photo.10.png" class="video-card">
-                            <img src="good.jpg" class="video-cover">
-                        </div>
-                    </a>
-                    <span>开启奇幻世界</span>
-                </div>-->    
-            </div>
+            <div class="like-list"></div>
+
             <div class="hot">
                 <div class="hot-title">
                     <span>热门奇幻番剧榜</span>
                     <p>每小时更新</p>
                 </div>
                 <div class="hot-content">
-                    <div class="amazing-list">
-
+                    <div class="slider-wrap">
+                        <button class="prev-btn">&lt;</button>
+                        <div class="view-port">
+                            <div class="amazing-list"></div>
+                        </div>
+                        <button class="next-btn">&gt;</button>
                     </div>
                 </div>
             </div>
@@ -805,6 +641,9 @@
             document.addEventListener('DOMContentLoaded',() => {
                 const hot_watch='http://47.107.55.106:8080/api/anemi/hotWatch';
                 const container=document.querySelector('.hot-list');
+                let animeData=[];
+                let index =0;
+                const cardWidth= 210;
                 function renderAnimeCards(animeList){
                     container.innerHTML='';
                     if(!animeList || animeList.length===0)
@@ -812,11 +651,9 @@
                         container.innerHTML='<div style="padding:40px;text-align:center;color:#999;>暂无数据~</div>';
                         return;
                     }
-                    const group1=animeList.slice(0,6);
-                    const group2=animeList.slice(6,8)
-                    group1.forEach(anime => {
+                    animeList.forEach(anime => {
                         let card=document.createElement('div');
-                        card.className='img-item group1'
+                        card.className='img-item'
                         card.innerHTML=`
                             <div class="wrap">
                                 <a href="detail-page.html" target="_blank">
@@ -834,47 +671,6 @@
                             <span>${anime.name}</span>
                         `;
                         container.appendChild(card);
-                    });
-                    group2.forEach(anime => {
-                        let card=document.createElement('div');
-                        card.className='img-item group2'
-                        card.style.display='none';
-                        card.innerHTML=`
-                            <div class="wrap">
-                                <a href="detail-page.html" target="_blank">
-                                    <img src="${anime.photo}" class="video-card"alt="${anime.name}">
-                                    <img src="good.jpg"class="video-cover" alt="敬请期待">
-                                </a>
-                            </div>
-                            <div class="score-mark">
-                                <p>${anime.score}</p>
-                            </div>
-                            <div class="info-bar">
-                                <img src="logos/关注.png"class="collect-btn">
-                                <img src="logos/播放.png"class="play-btn">
-                            </div>
-                            <span>${anime.name}</span>
-                        `;
-                        container.appendChild(card);
-                    });
-                    const leftBtn=document.querySelector('.left-btn');
-                    const rightBtn=document.querySelector('.right-btn');
-                    const group1Cards=document.querySelector('.group1');
-                    const group2Cards=document.querySelector('.group2');
-                    leftBtn.style.opacity='0';
-                    rightBtn.addEventListener('click',()=>{
-                        group1Cards.forEach(card=> card.style.display='none');
-                        group2Cards.forEach(card => card.style.display='block');
-                        rightBtn.style.opacity='0';
-                        leftBtn.style.opacity='1';
-                        bindHoverEffect();
-                    });
-                    leftBtn.addEventListener('click',()=>{
-                        group1Cards.forEach(card=> card.style.display='block');
-                        group2Cards.forEach(card => card.style.display='none');
-                        rightBtn.style.opacity='1';
-                        leftBtn.style.opacity='0';
-                        bindHoverEffect();
                     });
                     bindHoverEffect();
                     bindHoverInfoBar();
@@ -887,6 +683,7 @@
                             const hotListContainer=document.querySelector('.hot-list');
                             if(hotListContainer){
                                 renderAnimeCards(data.data,hotListContainer);
+                                updateArrowState();
                             }
                         }
                     }
@@ -898,6 +695,32 @@
                         }
                     }
                 }
+                const leftBtn=document.querySelector('.left-btn');
+                const rightBtn=document.querySelector('.right-btn');
+                function slide(){
+                    const moveX=-index * cardWidth;
+                    container.style.transform=`translateX(${moveX}px)`;
+                    updateArrowState();
+                }
+                function updateArrowState(){
+                    const maxIndex =animeData.length - 6;
+                    leftBtn.style.display=index === 0 ? 'none' :'block';                    
+                    rightBtn.style.display=index >= maxIndex ? 'none' : 'block';
+                }
+                rightBtn.addEventListener('click',()=>{
+                    const maxIndex =animeData.length - 6;
+                    if(index < maxIndex){
+                        index++;
+                        slide();
+                    }
+                });
+                leftBtn.addEventListener('click',()=>{
+                    const maxIndex =animeData.length - 6;
+                    if(index > 0){
+                        index--;
+                        slide();
+                    }
+                });
                 function bindHoverEffect(){
                     const card_config={
                         scaleX:2,
@@ -1192,6 +1015,11 @@
             document.addEventListener('DOMContentLoaded',() => {
                 const amazing='http://47.107.55.106:8080/api/anemi/ranking/1';
                 const container=document.querySelector('.amazing-list');
+                const prevBtn=document.querySelector('.prev-btn');
+                const nextBtn=document.querySelector('.next-btn');
+                let animeData=[];
+                let pageIndex=0;
+                const pageSize=5;
                 function renderAnimeCards(animeList){
                     container.innerHTML='';
                     if(!animeList || animeList.length===0)
@@ -1201,7 +1029,7 @@
                     }
                     animeList.forEach(anime=>{
                         let card=document.createElement('div');
-                        card.className='img-item'
+                        card.className='img-item';
                         card.innerHTML=`
                             <div class="wrap">
                                 <a href="detail-page.html" target="_blank">
@@ -1242,6 +1070,111 @@
                         }
                     }
                 }
+                function bindHoverEffect(){
+                    const card_config={
+                    scaleX:2,
+                    offset:100,
+                    zIndex:10,
+                    extraSpace:180
+                    }
+                    const allLists=document.querySelectorAll('.like-list');
+                    allLists.forEach(list => {
+                        const cards=list.querySelectorAll('.img-item');
+                        cards.forEach(card =>{
+                        card.addEventListener('mouseenter',function(){
+                            const rowTop=this.offsetTop;
+                            const rowCards=Array.from(cards).filter(item=>{
+                                return item.offsetTop ===rowTop;
+                            });
+                            const index=rowCards.indexOf(this);
+                            rowCards.forEach((item,i) => {
+                                if(index === 0)
+                                {   
+                                    if(i === 0)
+                                    {
+                                        item.style.transform=`scaleX(${card_config.scaleX})`;
+                                        item.style.zIndex=card_config.zIndex;
+                                    }
+                                    else
+                                    {
+                                        item.style.transform=`translateX(${card_config.extraSpace}px)`;
+                                    }
+                                }
+                                else
+                                {
+                                    if(i<index)
+                                    {
+                                        item.style.transform=`translateX(-${card_config.offset}px)`;
+                                    }
+                                    else if(i > index)
+                                    {
+                                        item.style.transform=`translateX(${card_config.offset}px)`;
+                                    }
+                                    else
+                                    {
+                                        item.style.transform=`scaleX(${card_config.scaleX})`;
+                                        item.style.zIndex=card_config.zIndex;
+                                    }
+                                }
+                            });
+                        });
+                            card.addEventListener('mouseleave',function() {
+                                const rowTop=this.offsetTop;
+                                const rowCards=Array.from(cards).filter(item =>{
+                                    return item.offsetTop ===rowTop;
+                                });
+                                rowCards.forEach(item => {
+                                    item.style.transform='';
+                                    item.style.zIndex='';
+                                });
+                            });
+                        });        
+                    });
+                }
+                function bindHoverInfoBar(){
+                    const cards =document.querySelectorAll('.img-item');
+                    cards.forEach(card => {
+                        const collectBtn=card.querySelector('.collect-btn');
+                        const playBtn=card.querySelector('.play-btn');
+                        if (!collectBtn || !playBtn) return;
+                        collectBtn.addEventListener('click',function(e){
+                            e.stopPropagation();
+                            const isCollected = this.classList.toggle('collected');
+                            if(isCollected)
+                            {
+                                this.src='logos/已关注.png';
+                                alert('已收藏');
+                            }
+                            else{
+                                this.src='logos/关注.png';
+                                alert('取消收藏');
+                            }
+                        });
+                        playBtn.addEventListener('click',function(e){
+                            e.stopPropagation();
+                            const link=card.querySelector('a').href;
+                            window.open(link,'blank');
+                        });
+                    });
+                }
+                function slideMove(){
+                    const moveX=-pageIndex * 1000;
+                    you_like.style.transform=`translateX(${moveX}px)`;
+                }
+                nextBtn.addEventListener('click',()=>{
+                    const maxPage=Math.ceil(animeData.length/pageSize)-1;
+                    if(pageIndex<maxPage){
+                        pageIndex++;
+                        slideMove();
+                    }
+                })
+                prevBtn.addEventListener('click',()=>{
+                    if(pageIndex>0){
+                        pageIndex--;
+                        slideMove();
+                    }
+                })
+                loadYouLikeList();
             });
         </script>
     </body>

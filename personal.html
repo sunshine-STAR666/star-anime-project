@@ -281,6 +281,64 @@
                 cursor: pointer;
                 width:100px;
             }
+
+            .avatar-wrap {
+                position: relative; 
+                width: 320px;
+                height: 320px;
+                margin: 0 auto;
+            }
+
+            
+            .avatar {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                width: 160px;
+                height: 160px;
+                border-radius: 50%;
+                object-fit: cover;
+                border: 4px solid #e5e9ef;
+            }
+
+            .btn-1 {
+                position: absolute;
+                top: 50%;
+                left: 20px;
+                transform: translateY(-50%);
+                background: #00a1d6;
+                color: #fff;
+                border: none;
+                width: 72px;
+                height: 72px;
+                border-radius: 50%;
+                font-size: 14px;
+                cursor: pointer;
+                z-index:99;
+            }
+            .btn-2 {
+                position: absolute;
+                top: 50%;
+                right: 20px;
+                transform: translateY(-50%);
+                background: #fff;
+                color: #333;
+                border: 1px solid #ccc;
+                width: 72px;
+                height: 72px;
+                border-radius: 50%;
+                font-size: 14px;
+                cursor: pointer;
+            }
+            .menu-link.active{
+                background:#00a1d6;
+                color:#e5f2ff;
+            }
+            .main-item{
+                display:none;
+            }
+
         </style>
     </head>
     <body>
@@ -346,9 +404,9 @@
                 <ul class="sidebar-menu">
                     <li class="menu-item"><a href="#" class="menu-link">首页</a></li>
                     <li class="menu-item"><a href="#" class="menu-link">大会员</a></li>
-                    <li class="menu-item"><a href="#" class="menu-link">会员积分</a></li>
-                    <li class="menu-item"><a href="#" class="menu-link">我的信息</a></li>
-                    <li class="menu-item"><a href="#" class="menu-link">我的头像</a></li>
+                    <li class="menu-item"><a href="#" class="menu-link" >会员积分</a></li>
+                    <li class="menu-item"><a href="#" class="menu-link" data-target="page-info">我的信息</a></li>
+                    <li class="menu-item"><a href="#" class="menu-link" data-target="page-avatar">我的头像</a></li>
                     <li class="menu-item"><a href="#" class="menu-link">粉丝勋章</a></li>
                     <li class="menu-item"><a href="#" class="menu-link">成就勋章</a></li>
                     <li class="menu-item"><a href="#" class="menu-link">账号安全</a></li>
@@ -361,40 +419,53 @@
                 </ul>
             </div>
             <div class="main-content">
-                <div class="content-top">
-                    <span>我的信息</span>
-                </div>
-                <div class="form-card">
-                    <div class="form-row">
-                        <label for="nickname">昵称:</label>
-                        <input type="text" id="nickname" placeholder="star">
+                <div class="main-item" id="page-info" style="display:block;"> 
+                    <div class="content-top">
+                        <span>我的信息</span>
                     </div>
-                    <div class="form-row">
-                        <label for="username">用户名:</label>
-                        <input type="text" id="username" value="bili_90587091394"disabled>
-                    </div>
-                    <div class="form-row">
-                        <label for="signature">我的签名:</label>
-                        <textarea  class="announcement" id="signature" placeholder="设置您的签名~"></textarea>
-                    </div>
-                    <div class="form-row">
-                        <label>性别:</label>
-                        <div class="radio-group">
-                            <label><input type="radio" name="gender" value="male">男</label>
-                            <label><input type="radio" name="gender" value="female">女</label>
-                            <label><input type="radio" name="gender" value="secret">保密</label>
+                    <div class="form-card">
+                        <div class="form-row">
+                            <label for="nickname">昵称:</label>
+                            <input type="text" id="nickname" placeholder="star">
+                        </div>
+                        <div class="form-row">
+                            <label for="username">用户名:</label>
+                            <input type="text" id="username" value="bili_90587091394"disabled>
+                        </div>
+                        <div class="form-row">
+                            <label for="signature">我的签名:</label>
+                            <textarea  class="announcement" id="signature" placeholder="设置您的签名~"></textarea>
+                        </div>
+                        <div class="form-row">
+                            <label>性别:</label>
+                            <div class="radio-group">
+                                <label><input type="radio" name="gender" value="male">男</label>
+                                <label><input type="radio" name="gender" value="female">女</label>
+                                <label><input type="radio" name="gender" value="secret">保密</label>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <label for="birthday">出生日期:</label>
+                            <input type="date" id="birthday" value="1980-01-01">
+                        </div>
+                        <div class="form-row">
+                            <label>学校信息:</label>
+                            <span style="color:#999; font-size:12px;">*学校信息当前仅支持在App中进行编辑(需升级至6.34及以上版本)</span>
                         </div>
                     </div>
-                    <div class="form-row">
-                        <label for="birthday">出生日期:</label>
-                        <input type="date" id="birthday" value="1980-01-01">
-                    </div>
-                    <div class="form-row">
-                        <label>学校信息:</label>
-                        <span style="color:#999; font-size:12px;">*学校信息当前仅支持在App中进行编辑(需升级至6.34及以上版本)</span>
+                    <button class="save-btn" id="saveBtn">保存</button>
+                </div>
+            <div class="main-content" id="page-avatar" style="display:none;">
+                <div class="content-top">
+                    <span>我的头像</span>
+                </div>
+                <div class="avatar-section">
+                    <div class="avatar-wrap">
+                        <button class="btn-1">更换头像</button>
+                        <img src="logos/头像.jpg" class="avatar">
+                        <button class="btn-2">卸下挂件</button>
                     </div>
                 </div>
-                <button class="save-btn" id="saveBtn">保存</button>
             </div>
         </div>
         <script>
@@ -431,6 +502,24 @@
                 localStorage.setItem('user',JSON.stringify(obj));
                 alert('保存成功');
             }
+        </script>
+        <script>
+            const menuLinks = document.querySelectorAll('.menu-link');
+            const mainItems = document.querySelectorAll('.main-item');
+            menuLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    menuLinks.forEach(l => l.classList.remove('active'));
+                    this.classList.add('active');
+                    const targetId = this.getAttribute('data-target');
+                    mainItems.forEach(item => item.style.display = 'none');
+                    document.getElementById(targetId).style.display = 'block';
+                });
+            });
+            document.addEventListener('DOMContentLoaded', () => {
+                menuLinks[3].classList.add('active');
+                mainItems[3].style.display = 'block';
+            });
         </script>
     </body>
 </html>

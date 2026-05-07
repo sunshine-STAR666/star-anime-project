@@ -14,9 +14,8 @@
             }
             .header{/*导航栏*/
                 display:flex;
-                justify-content:space-between;/*左右两端对齐*/
-                align-items:flex-start;
-                height:180px;
+                flex-direction:column;
+                height:200px;
                 border-radius:8px;
                 background-image:url("img.2/photo.33.png");
                 background-color:rgba(0,0,0,0.2);
@@ -25,6 +24,12 @@
                 background-repeat:no-repeat;
                 background-blend-mode:multiply;
                 box-shadow:0 4px 16px rgba(0,0,0,0.1);
+                width:100%;
+            }
+            .wrap{
+                display:flex;
+                justify-content:space-between;/*左右两端对齐*/
+                align-items:flex-start;
                 font-size:16px;
                 width:100%;
                 color:#fffdfd;
@@ -263,6 +268,64 @@
             .submit:hover{
                 background:#faa6ec;
                 cursor:pointer;
+            }
+            
+
+            .header-bottom{
+                display:flex;
+                width:100%;
+                background:transparent;
+                margin-top:40px;
+                padding:0 40px;
+            }
+            .bottom-main{
+                display:flex;
+                align-items:flex-start;
+                margin:0 auto;
+                width:80%;
+            }
+            .main-left{
+                display:flex;
+                justify-content:flex-start;
+                gap:20px;
+                width:70%;
+            }
+            .introduce {
+                display:flex;
+                flex-direction:column;
+            }
+            .introduce-bottom{
+                width:1000px;
+            }
+            .introduce-bottom input{
+                display:flex;
+                width:70%;
+                outline:none;
+                border-radius:4px;
+                opacity:0.5;
+            }
+            .introduce-bottom input:hover{
+                opacity:1;
+                transition:translate all 0.3s ease;
+                
+            }
+            .main-left img{
+                width:48px;
+                height:48px;
+                border-radius:50%;
+                object-fit:cover;
+            }
+            .main-right{
+                display:flex;
+                width:20%;
+                align-items:center;
+            }
+            .right-button{
+                display:flex;
+                margin:auto;
+                padding:10px 15px;
+                border-radius:8px;
+                border:none;
             }
             .main-bar{
                 display:flex;
@@ -679,225 +742,247 @@
     </head>
     <body>
         <div class="header">
-            <div class="header-left">
-                <img src="logos/logo.1.png" alt="B站" class="nav-logo">
-                <a href="index.html" class="return">首页</a>
-                <span>番剧</span>
-                <span>直播</span>
-                <span>游戏中心</span>
-                <span>会员购</span>
-                <span>漫画</span>
-                <span>赛事</span>
-                <span>AI豆</span>
-            </div>           
-            <div class="header-right">
-                <div class="avatar-container">
-                    <img  id="login" src="logos/bilibili.png" alt="登陆头像" class="login" onclick="handleAvatarClick()">
-                    <div id="userMenu" class="user-menu">
-                        <p class="username">star</p>
-                        <div class="menu-items">
-                            <span>个人中心</span>
-                            <span>投稿管理</span>
-                            <span>推荐服务</span>
-                            <span>主题：浅色</span>
-                            <div class="logout-item" onclick="logout()">退出登录</div>
+            <div class="wrap">
+                <div class="header-left">
+                    <img src="logos/logo.1.png" alt="B站" class="nav-logo">
+                    <a href="index.html" class="return">首页</a>
+                    <span>番剧</span>
+                    <span>直播</span>
+                    <span>游戏中心</span>
+                    <span>会员购</span>
+                    <span>漫画</span>
+                    <span>赛事</span>
+                    <span>AI豆</span>
+                </div>           
+                <div class="header-right">
+                    <div class="avatar-container">
+                        <img  id="login" src="logos/bilibili.png" alt="登陆头像" class="login" onclick="handleAvatarClick()">
+                        <div id="userMenu" class="user-menu">
+                            <p class="username">star</p>
+                            <div class="menu-items">
+                                <span>个人中心</span>
+                                <span>投稿管理</span>
+                                <span>推荐服务</span>
+                                <span>主题：浅色</span>
+                                <div class="logout-item" onclick="logout()">退出登录</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="modal" class="modal">
+                        <div class="box">
+                            <div id="loginView">
+                                <h3>登录</h3>
+                                <input id="user" type="text" placeholder="账号" class="box-input">
+                                <input id="pwd" type="password" placeholder="密码" class="box-input">
+                                <button onclick="login()" class="box-button">登录</button>
+                            </div>
+                            <div id="logoutView" style="display:none">
+                                <h3>已登录</h3>
+                                <button onclick="logout()" class="box-button">退出登录</button>
+                            </div>
+                            <br>
+                            <button onclick="closeBox()" class="box-button">关闭</button>
+                        </div>
+                    </div>
+                    
+                    <div class="search-box">
+                        <input type="text" placeholder="搜索" style="border:none">
+                        <img src="logos/search.png" alt="搜索" class="search-icon">
+                    </div>
+                    <div class="action-bar">
+                        <div class="action-item">
+                            <img src="logos/大会员.png" alt="大会员" class="action-btn">
+                            <span>大会员</span>
+                        </div>
+                        <div class="action-item">
+                            <img src="logos/消息.png" alt="消息" class="action-btn">
+                            <span>消息</span>
+                        </div>
+                        <div class="action-item">
+                            <img src="logos/动态.png" alt="动态" class="action-btn">
+                            <span>动态</span>
+                        </div>
+                        <div class="action-item">
+                            <img src="logos/收藏.1.png" alt="收藏" class="action-btn">
+                            <span>收藏</span>
+                        </div>
+                        <div class="action-item">
+                            <img src="logos/历史.png" alt="历史" class="action-btn">
+                            <span>历史</span>
+                        </div>
+                        <div class="action-item">
+                            <img src="logos/创作中心.png" alt="创作中心" class="action-btn">
+                            <span>创作中心</span>
+                        </div>
+                    </div>
+                    <button onclick="showInfo()" class="submit">投稿</button>
+                </div>
+            <wrap>
+        </div>
+        <div class="header-bottom">
+            <div class="bottom-main">
+                <div class="main-left">
+                    <a href="personal.html" target="_blank">
+                        <img src="avatar.png" alt="我的头像"></a>
+                    <div class="intruduce">
+                        <div class="introduce-top">
+                            <span style="font-size:24px;font-weight:bold; margin-bottom:10px;">bili_79797670993</span>
+                        </div>
+                        <div class="introduce-bottom">
+                            <input type="text" placeholder="编辑个性签名~" style="border:none; color:#232323;"></div>
                         </div>
                     </div>
                 </div>
-                <div id="modal" class="modal">
-                    <div class="box">
-                        <div id="loginView">
-                            <h3>登录</h3>
-                            <input id="user" type="text" placeholder="账号" class="box-input">
-                            <input id="pwd" type="password" placeholder="密码" class="box-input">
-                            <button onclick="login()" class="box-button">登录</button>
-                        </div>
-                        <div id="logoutView" style="display:none">
-                            <h3>已登录</h3>
-                            <button onclick="logout()" class="box-button">退出登录</button>
-                        </div>
-                        <br>
-                        <button onclick="closeBox()" class="box-button">关闭</button>
-                    </div>
+                <div class="main-right">
+                    <button class="right-button">视角：我自己</button>
                 </div>
-                <script>
-                    let isLogin=false;
-                    let 
-                    loginAvatar,userMenu,menuAvatar,usernameEl;
-                    document.addEventListener('DOMContentLoaded',function()
-                    {
-                        loginAvatar=document.getElementById('login');
-                        userMenu=document.getElementById('userMenu');
-                        menuAvatar=document.getElementById('menuAvatar');
-                        usernameEl=document.querySelector('.username');
-                    })
-                    function handleAvatarClick(){
-                        if(!isLogin)
-                        {
-                            openBox();
-                        }
-                        else{
-                            toggleMenu();
-                        }
-                    }
-                    function toggleMenu(){
-                        userMenu.classList.toggle('show');
-                    }
-                    document.addEventListener('click',(e) => {
-                        if (!document.querySelector('.avatar-container').contains(e.target)){
-                            userMenu.classList.remove('show');
-                        }
-                    });
-                    function openBox(){
-                        document.getElementById("modal").style.display="flex";
-                        if(isLogin){
-                            document.getElementById("loginView").style.display="none";
-                            document.getElementById("logoutView").style.display="block";
-                        }
-                        else{
-                            document.getElementById("loginView").style.display="block";
-                            document.getElementById("logoutView").style.display="none";  
-                        }
-                    }
-                    function closeBox(){
-                        document.getElementById("modal").style.display="none";
-                    }
-                    function login()
-                    {
-                        const userInput=document.getElementById("user").value.trim();/*拿到输入框*/
-                        const pwdInput=document.getElementById("pwd").value.trim();
-                        if (!userInput || !pwdInput)
-                        {
-                            alert("账号和密码不能为空!");
-                            return;
-                        }
-                        var myHeaders = new Headers();
-                        myHeaders.append("Content-Type","application/json");
-                        var raw=JSON.stringify({
-                            name:userInput,
-                            pwd:pwdInput
-                        });
-                        var requestOptions={
-                            method:'POST',
-                            headers:myHeaders,
-                            body:raw,
-                            redirect:'manual'
-                        }
-                        fetch("http://47.107.55.106:8080/api/user/login",requestOptions)
-                        .then(response => response.json())
-                        .then(data =>
-                        {
-                            console.log("接口返回数据",data);
-                            if(data.code === 200)
-                            {
-                                isLogin=true;
-                                document.getElementById("login").src="avatar.png";
-                                localStorage.setItem("token",data.data);
-                                closeBox();
-                                alert("登录成功!");
-                            }
-                            else
-                            {
-                                alert("登录失败:" + (data.message || "账号或密码错误"));
-                            }
-                        })
-                        .catch(err => 
-                        {
-                            console.error("登录请求异常:",err);
-                            alert("网络异常，请检查后重试！");
-                        });
-                    }
-                    function logout() 
-                    {
-                        const token = localStorage.getItem("token");
-                        if (!token) {
-                            resetLoginState();
-                            return;
-                        }
-                        var myHeaders=new Headers();
-                        myHeaders.append("Authorization",token);
-                        var requestOptions={
-                            method:'GET',
-                            headers:myHeaders,
-                            redirect:'follow'
-                        };
-                        fetch("http://47.107.55.106:8080/api/user/logout",requestOptions)
-
-                        .then(response => response.json())
-                        .then(res => {
-                            if (res.code === 200) {
-                            localStorage.removeItem("token");
-                            resetLoginState();
-                            alert("已成功退出登录");
-                            } 
-                            else 
-                            {
-                                alert("退出失败：" + (res.message || "未知错误"));
-                            }
-                        })
-                        .catch(error => {
-                            console.log('error', error);
-                            alert("网络异常，请稍后重试！");
-                        });
-                    }
-                    // 封装重置登录状态的函数（复用）
-                    function resetLoginState() {
-                    isLogin = false;
-                    // 恢复默认头像
-                    document.getElementById("login").src = "logos/bilibili.png";
-                    if(menuAvatar){
-                        menuAvatar.src = "logos/bilibili.png";
-                    }
-                    if(usernameEl){
-                        usernameEl.innerText = "未登录";
-                    }
-                    // 关闭下拉菜单
-                    if(userMenu){
-                        userMenu.classList.remove('show');
-                    }
-                    // 恢复登录弹窗状态
-                    document.getElementById("loginView").style.display = 'block';
-                    document.getElementById("logoutView").style.display = 'none';
-                    }
-                </script>
-                <div class="search-box">
-                    <input type="text" placeholder="搜索" style="border:none">
-                    <img src="logos/search.png" alt="搜索" class="search-icon">
-                </div>
-                <div class="action-bar">
-                    <div class="action-item">
-                        <img src="logos/大会员.png" alt="大会员" class="action-btn">
-                        <span>大会员</span>
-                    </div>
-                    <div class="action-item">
-                        <img src="logos/消息.png" alt="消息" class="action-btn">
-                        <span>消息</span>
-                    </div>
-                    <div class="action-item">
-                        <img src="logos/动态.png" alt="动态" class="action-btn">
-                        <span>动态</span>
-                    </div>
-                    <div class="action-item">
-                        <img src="logos/收藏.1.png" alt="收藏" class="action-btn">
-                        <span>收藏</span>
-                    </div>
-                    <div class="action-item">
-                        <img src="logos/历史.png" alt="历史" class="action-btn">
-                        <span>历史</span>
-                    </div>
-                    <div class="action-item">
-                        <img src="logos/创作中心.png" alt="创作中心" class="action-btn">
-                        <span>创作中心</span>
-                    </div>
-                </div>
-                <button onclick="showInfo()" class="submit">投稿</button>
-                <script>
-                    function showInfo(){
-                        alert("感谢你的关注！投稿后续会有哦~");
-                    }   
-                </script>
             </div>
         </div>
+        <script>
+                function showInfo(){
+                    alert("感谢你的关注！投稿后续会有哦~");
+                }   
+            </script>
+        <script>
+            let isLogin=false;
+            let 
+            loginAvatar,userMenu,menuAvatar,usernameEl;
+            document.addEventListener('DOMContentLoaded',function()
+            {
+                loginAvatar=document.getElementById('login');
+                userMenu=document.getElementById('userMenu');
+                menuAvatar=document.getElementById('menuAvatar');
+                usernameEl=document.querySelector('.username');
+            })
+            function handleAvatarClick(){
+                if(!isLogin)
+                {
+                    openBox();
+                }
+                else{
+                    toggleMenu();
+                }
+            }
+            function toggleMenu(){
+                userMenu.classList.toggle('show');
+            }
+            document.addEventListener('click',(e) => {
+                if (!document.querySelector('.avatar-container').contains(e.target)){
+                    userMenu.classList.remove('show');
+                }
+            });
+            function openBox(){
+                document.getElementById("modal").style.display="flex";
+                if(isLogin){
+                    document.getElementById("loginView").style.display="none";
+                    document.getElementById("logoutView").style.display="block";
+                }
+                else{
+                    document.getElementById("loginView").style.display="block";
+                    document.getElementById("logoutView").style.display="none";  
+                }
+            }
+            function closeBox(){
+                document.getElementById("modal").style.display="none";
+            }
+            function login()
+            {
+                const userInput=document.getElementById("user").value.trim();/*拿到输入框*/
+                const pwdInput=document.getElementById("pwd").value.trim();
+                if (!userInput || !pwdInput)
+                {
+                    alert("账号和密码不能为空!");
+                    return;
+                }
+                var myHeaders = new Headers();
+                myHeaders.append("Content-Type","application/json");
+                var raw=JSON.stringify({
+                    name:userInput,
+                    pwd:pwdInput
+                });
+                var requestOptions={
+                    method:'POST',
+                    headers:myHeaders,
+                    body:raw,
+                    redirect:'manual'
+                }
+                fetch("http://47.107.55.106:8080/api/user/login",requestOptions)
+                .then(response => response.json())
+                .then(data =>
+                {
+                    console.log("接口返回数据",data);
+                    if(data.code === 200)
+                    {
+                        isLogin=true;
+                        document.getElementById("login").src="avatar.png";
+                        localStorage.setItem("token",data.data);
+                        closeBox();
+                        alert("登录成功!");
+                    }
+                    else
+                    {
+                        alert("登录失败:" + (data.message || "账号或密码错误"));
+                    }
+                })
+                .catch(err => 
+                {
+                    console.error("登录请求异常:",err);
+                    alert("网络异常，请检查后重试！");
+                });
+            }
+            function logout() 
+            {
+                const token = localStorage.getItem("token");
+                if (!token) {
+                    resetLoginState();
+                    return;
+                }
+                var myHeaders=new Headers();
+                myHeaders.append("Authorization",token);
+                var requestOptions={
+                    method:'GET',
+                    headers:myHeaders,
+                    redirect:'follow'
+                };
+                fetch("http://47.107.55.106:8080/api/user/logout",requestOptions)
+
+                .then(response => response.json())
+                .then(res => {
+                    if (res.code === 200) {
+                    localStorage.removeItem("token");
+                    resetLoginState();
+                    alert("已成功退出登录");
+                    } 
+                    else 
+                    {
+                        alert("退出失败：" + (res.message || "未知错误"));
+                    }
+                })
+                .catch(error => {
+                    console.log('error', error);
+                    alert("网络异常，请稍后重试！");
+                });
+            }
+            // 封装重置登录状态的函数（复用）
+            function resetLoginState() {
+            isLogin = false;
+            // 恢复默认头像
+            document.getElementById("login").src = "logos/bilibili.png";
+            if(menuAvatar){
+                menuAvatar.src = "logos/bilibili.png";
+            }
+            if(usernameEl){
+                usernameEl.innerText = "未登录";
+            }
+            // 关闭下拉菜单
+            if(userMenu){
+                userMenu.classList.remove('show');
+            }
+            // 恢复登录弹窗状态
+            document.getElementById("loginView").style.display = 'block';
+            document.getElementById("logoutView").style.display = 'none';
+            }
+        </script>
         <div class="main-bar">
             <div class="main-items">
                 <div class="main-item" data-page="home">
@@ -1235,8 +1320,12 @@
                         });
                         const result=await res.json();
                         console.log('收藏接口返回',result);
-                        if(result.code !== 200 || !result.data){
-                            alert('获取列表失败' + result.message);
+                        if(result.code !== 200){
+                            alert('获取列表失败' + result.message ||'未知错误');
+                            return;
+                        }
+                        if(!result.data || result.data.length === 0){
+                            container.innerHTML='<div style="padding:30px; text-align:center;color:#999;">你还没有收藏任何番剧</div>';
                             return;
                         }
                         renderCollectCards(result.data);
