@@ -504,6 +504,7 @@
                     }
                     function login()
                     {
+                        /*校验部分*/
                         const userInput=document.getElementById("user").value.trim();/*拿到输入框*/
                         const pwdInput=document.getElementById("pwd").value.trim();
                         if (!userInput || !pwdInput)
@@ -511,6 +512,7 @@
                             alert("账号和密码不能为空!");
                             return;
                         }
+                        /*请求配置部分*/
                         var myHeaders = new Headers();
                         myHeaders.append("Content-Type","application/json");
                         var raw=JSON.stringify({
@@ -523,6 +525,7 @@
                             body:raw,
                             redirect:'manual'
                         }
+                        /*发送请求 + 响应处理*/
                         fetch("http://47.107.55.106:8080/api/user/login",requestOptions)
                         .then(response => response.json())
                         .then(data =>
@@ -547,13 +550,17 @@
                             alert("网络异常，请检查后重试！");
                         });
                     }
+
+                    
                     function logout() 
                     {
+                        //前置校验
                         const token = localStorage.getItem("token");
                         if (!token) {
                             resetLoginState();
                             return;
                         }
+                        //组装登出配置
                         var myHeaders=new Headers();
                         myHeaders.append("Authorization",token);
                         var requestOptions={
@@ -561,8 +568,8 @@
                             headers:myHeaders,
                             redirect:'follow'
                         };
+                        //发送请求
                         fetch("http://47.107.55.106:8080/api/user/logout",requestOptions)
-
                         .then(response => response.json())
                         .then(res => {
                             if (res.code === 200) {
@@ -580,24 +587,21 @@
                             alert("网络异常，请稍后重试！");
                         });
                     }
-                    // 封装重置登录状态的函数（复用）
+                    // 封装重置登录状态的函数
                     function resetLoginState() {
-                    isLogin = false;
-                    // 恢复默认头像
-                    document.getElementById("login").src = "logos/bilibili.png";
-                    if(menuAvatar){
-                        menuAvatar.src = "logos/bilibili.png";
-                    }
-                    if(usernameEl){
-                        usernameEl.innerText = "未登录";
-                    }
-                    // 关闭下拉菜单
-                    if(userMenu){
-                        userMenu.classList.remove('show');
-                    }
-                    // 恢复登录弹窗状态
-                    document.getElementById("loginView").style.display = 'block';
-                    document.getElementById("logoutView").style.display = 'none';
+                        isLogin = false;
+                        document.getElementById("login").src = "logos/bilibili.png";
+                        if(menuAvatar){
+                            menuAvatar.src = "logos/bilibili.png";
+                        }
+                        if(usernameEl){
+                            usernameEl.innerText = "未登录";
+                        }
+                        if(userMenu){
+                            userMenu.classList.remove('show');
+                        }
+                        document.getElementById("loginView").style.display = 'block';
+                        document.getElementById("logoutView").style.display = 'none';
                     }
                 </script>
                 <div class="search-box">
