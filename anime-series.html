@@ -218,14 +218,17 @@
                 display:flex;
                 align-items:center;
             }
+            .view-port1{
+                width:90%;
+                overflow:hidden;
+            }
             .hot-list{
                 display:flex;
-                
-                scroll-behavior:smooth;/*滚动平滑过渡*/
-                scrollbar-width:none;/*隐藏垂直滚动条*/
                 gap:30px;
                 padding:10px 30px;
                 margin-bottom:30px;
+                flex-wrap:nowrap;
+                transition:transform 0.3s ease;
             }
             .scroll-btn{
                 position:absolute;
@@ -239,8 +242,9 @@
                 color:#fff;
                 font-size:20px;
                 cursor:pointer;
-                z-index:10;
+                z-index:999;
                 transition:all 0.2s ease;
+               
             }
             .left-btn{
                 left:10px;
@@ -353,7 +357,6 @@
                 height:100%;
                 flex-direction:column;
                 gap:10px;
-                background:#68119e;
             }
             .hot-title span{
                 font-size:20px;
@@ -384,18 +387,11 @@
                 width:1100px;
                 overflow:hidden;
             }
-            .prev-btn .next-btn{
-                position:absolute;
-                top:50%;
-                transform:translateY(-50%);
-                width:40px;
-                height:120px;
-                border:none;
-                background:#eee;
-                cursor:pointer;
-                font-size:20px;
-                border-radius:4px;
-                z-index:10;
+            .prev-btn{
+                left:10px;
+            }
+            .next-btn{
+                right:10px;
             }
             .slider-wrap{
                 position:relative;
@@ -438,19 +434,26 @@
                     <span data-day="7">星期日</span>
                 </div>
             </div>
+        </div>
             
             <div class="img-list">
 
             </div>
+        
+
             <div class="all-title">
                 <img src="logos/推荐.png" class="logo">
                 <h2>番剧热播榜</h2>
             </div>
             <div class="scroll-wrapper">
                 <button class="scroll-btn left-btn">&lt;</button>
-                <div class="hot-list"></div>
+                <div class="view-port1">
+                    <div class="hot-list"></div>
+                </div>
                 <button class="scroll-btn right-btn">&gt;</button>
             </div>
+
+
             <div class="all-title">
                 <img src="logos/新热.png" class="logo">
                 <h2>新热推荐</h2>
@@ -481,15 +484,16 @@
                 </div>
                 <div class="hot-content">
                     <div class="slider-wrap">
-                        <button class="prev-btn">&lt;</button>
+                        <button class=" scroll-btn prev-btn">&lt;</button>
                         <div class="view-port">
                             <div class="amazing-list"></div>
                         </div>
-                        <button class="next-btn">&gt;</button>
+                        <button class=" scroll-btn next-btn">&gt;</button>
                     </div>
                 </div>
             </div>
         </div>
+        
         <script>
             document.addEventListener('DOMContentLoaded',() => 
             {
@@ -568,38 +572,38 @@
                     allLists.forEach(list => {
                         const cards=list.querySelectorAll('.img-item');
                         cards.forEach((card,index)=>{
-                        card.addEventListener('mouseenter',() => {
-                            cards.forEach((item,i) => {
-                                if(index === 0)
-                                {   
-                                    if(i === 0)
-                                    {
-                                        item.style.transform=`scaleX(${card_config.scaleX})`;
-                                        item.style.zIndex=card_config.zIndex;
+                            card.addEventListener('mouseenter',() => {
+                                cards.forEach((item,i) => {
+                                    if(index === 0)
+                                    {   
+                                        if(i === 0)
+                                        {
+                                            item.style.transform=`scaleX(${card_config.scaleX})`;
+                                            item.style.zIndex=card_config.zIndex;
+                                        }
+                                        else
+                                        {
+                                            item.style.transform=`translateX(${card_config.extraSpace}px)`;
+                                        }
                                     }
                                     else
                                     {
-                                        item.style.transform=`translateX(${card_config.extraSpace}px)`;
+                                        if(i<index)
+                                        {
+                                            item.style.transform=`translateX(-${card_config.offset}px)`;
+                                        }
+                                        else if(i > index)
+                                        {
+                                            item.style.transform=`translateX(${card_config.offset}px)`;
+                                        }
+                                        else
+                                        {
+                                            item.style.transform=`scaleX(${card_config.scaleX})`;
+                                            item.style.zIndex=card_config.zIndex;
+                                        }
                                     }
-                                }
-                                else
-                                {
-                                    if(i<index)
-                                    {
-                                        item.style.transform=`translateX(-${card_config.offset}px)`;
-                                    }
-                                    else if(i > index)
-                                    {
-                                        item.style.transform=`translateX(${card_config.offset}px)`;
-                                    }
-                                    else
-                                    {
-                                        item.style.transform=`scaleX(${card_config.scaleX})`;
-                                        item.style.zIndex=card_config.zIndex;
-                                    }
-                                }
+                                });
                             });
-                        });
                             card.addEventListener('mouseleave',() => {
                                 cards.forEach(item => {
                                     item.style.transform='';
@@ -614,7 +618,10 @@
                     cards.forEach(card => {
                         const collectBtn=card.querySelector('.collect-btn');
                         const playBtn=card.querySelector('.play-btn');
-                        if (!collectBtn || !playBtn) return;
+                        if (!collectBtn || !playBtn) 
+                        {
+                            return;
+                        }
                         collectBtn.addEventListener('click',function(e){
                             e.stopPropagation();
                             const isCollected = this.classList.toggle('collected');
@@ -635,15 +642,18 @@
                         });
                     });
                 }
+                loadData();
             });
-        </script>    
+        </script>
         <script>
             document.addEventListener('DOMContentLoaded',() => {
                 const hot_watch='http://47.107.55.106:8080/api/anemi/hotWatch';
                 const container=document.querySelector('.hot-list');
                 let animeData=[];
-                let index =0;
+                let index = 0;
                 const cardWidth= 210;
+                const leftBtn=document.querySelector('.left-btn');
+                const rightBtn=document.querySelector('.right-btn');
                 function renderAnimeCards(animeList){
                     container.innerHTML='';
                     if(!animeList || animeList.length===0)
@@ -674,7 +684,17 @@
                     });
                     bindHoverEffect();
                     bindHoverInfoBar();
+                    
                 }
+                /*function updateArrowState(){
+                    if(!animeData || animeData.length === 0){
+                        return;
+                    }
+                    
+                    const maxIndex =Math.max(animeData.length - 6.0);
+                    leftBtn.style.display=index === 0 ? 'none' :'block';                    
+                    rightBtn.style.display=index >= maxIndex ? 'none' : 'block';
+                }*/
                 async function loadHotWatchList(){
                     try{
                         const res = await fetch(hot_watch);
@@ -683,7 +703,7 @@
                             const hotListContainer=document.querySelector('.hot-list');
                             if(hotListContainer){
                                 renderAnimeCards(data.data,hotListContainer);
-                                updateArrowState();
+                                //updateArrowState();
                             }
                         }
                     }
@@ -695,27 +715,16 @@
                         }
                     }
                 }
-                const leftBtn=document.querySelector('.left-btn');
-                const rightBtn=document.querySelector('.right-btn');
                 function slide(){
-                    const moveX=-index * cardWidth;
+                    const moveX= -index * cardWidth;
                     container.style.transform=`translateX(${moveX}px)`;
-                    updateArrowState();
-                }
-                function updateArrowState(){
-                    const maxIndex =animeData.length - 6;
-                    leftBtn.style.display=index === 0 ? 'none' :'block';                    
-                    rightBtn.style.display=index >= maxIndex ? 'none' : 'block';
+                    //updateArrowState();
                 }
                 rightBtn.addEventListener('click',()=>{
-                    const maxIndex =animeData.length - 6;
-                    if(index < maxIndex){
                         index++;
                         slide();
-                    }
                 });
                 leftBtn.addEventListener('click',()=>{
-                    const maxIndex =animeData.length - 6;
                     if(index > 0){
                         index--;
                         slide();
@@ -801,7 +810,7 @@
                 }
                 loadHotWatchList();
             });
-        </script>
+        </script>    
         <script>
             document.addEventListener('DOMContentLoaded',async function(){
                 const API_URL='http://47.107.55.106:8080/api/anemi/hotRecommend';
@@ -830,10 +839,10 @@
                 function switchToIndex(index){
                     const maxIndex=recommendData.length-1;
                     index=index % recommendData.length;
-                    if(index < 0)
+                    /*if(index < 0)
                     {
                         index=recommendData.length + index;
-                    }
+                    }*/
                     currentIndex=index;
                     const item=recommendData[index];
                     bigImg.src=item.photo;
@@ -884,7 +893,7 @@
                         card.innerHTML=`
                             <div class="wrap">
                                 <a href="detail-page.html" target="_blank">
-                                    <img src="${anime.photo}" class="video-card" alt="${anime.name}">
+                                    <img src="${anime.photo}" class="video-card"alt="${anime.name}">
                                     <img src="good.jpg" class="video-cover" alt="敬请期待">
                                 </a>
                             </div>
@@ -1019,7 +1028,8 @@
                 const nextBtn=document.querySelector('.next-btn');
                 let animeData=[];
                 let pageIndex=0;
-                const pageSize=5;
+                const pageWidth=1260;
+                const pageSize=6;
                 function renderAnimeCards(animeList){
                     container.innerHTML='';
                     if(!animeList || animeList.length===0)
@@ -1158,22 +1168,24 @@
                     });
                 }
                 function slideMove(){
-                    const moveX=-pageIndex * 1000;
+                    const moveX=-pageIndex * pageWidth;
                     you_like.style.transform=`translateX(${moveX}px)`;
                 }
-                nextBtn.addEventListener('click',()=>{
-                    const maxPage=Math.ceil(animeData.length/pageSize)-1;
-                    if(pageIndex<maxPage){
-                        pageIndex++;
-                        slideMove();
-                    }
-                })
-                prevBtn.addEventListener('click',()=>{
-                    if(pageIndex>0){
-                        pageIndex--;
-                        slideMove();
-                    }
-                })
+                function bindSlideEvents(){
+                    nextBtn.addEventListener('click',()=>{
+                        const maxPage=Math.ceil(animeData.length/pageSize)-1;
+                        if(pageIndex<maxPage){
+                            pageIndex++;
+                            slideMove();
+                        }
+                    })
+                    prevBtn.addEventListener('click',()=>{
+                        if(pageIndex>0){
+                            pageIndex--;
+                            slideMove();
+                        }
+                    });
+                }
                 loadYouLikeList();
             });
         </script>

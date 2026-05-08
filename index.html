@@ -505,7 +505,7 @@
                     function login()
                     {
                         /*校验部分*/
-                        const userInput=document.getElementById("user").value.trim();/*拿到输入框*/
+                        const userInput=document.getElementById("user").value.trim();
                         const pwdInput=document.getElementById("pwd").value.trim();
                         if (!userInput || !pwdInput)
                         {
@@ -535,7 +535,7 @@
                             {
                                 isLogin=true;
                                 document.getElementById("login").src="avatar.png";
-                                localStorage.setItem("token",data.data);
+                                localStorage.setItem("token",data.data);//本地存储
                                 closeBox();
                                 alert("登录成功!");
                             }
@@ -705,8 +705,7 @@
             function stopAutoPlay() {//清除定时器
                 clearInterval(autoPlayTimer);
             }
-
-            // 默认第一张
+            
             goToSlide(0);
             startAutoPlay();
 
